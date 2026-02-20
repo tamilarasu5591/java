@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+.env
+.vscode/
+.idea/
+.DS_Store
+*.sqlite
+database.xlsx
+ProductPriceIndex.csv
+crop disease dataset/

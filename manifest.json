@@ -1,0 +1,20 @@
+{
+  "name": "AgriVistara - Crop Advisory",
+  "short_name": "AgriVistara",
+  "start_url": "/dashboard.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#27ae60",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/628/628283.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/628/628283.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

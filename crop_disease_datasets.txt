@@ -1,0 +1,30 @@
+CROP DISEASE IMAGE DATASETS (Download Sources)
+
+1.  PlantVillage Dataset Description: 50,000+ labeled images of healthy
+    and diseased plant leaves. Kaggle Link:
+    https://www.kaggle.com/datasets/emmarex/plantdisease Alternative:
+    https://www.kaggle.com/datasets/vipoooool/new-plant-diseases-dataset
+
+2.  Rice Leaf Disease Dataset Description: Images of rice leaf diseases
+    such as Brown Spot, Leaf Blast, and Bacterial Blight. Kaggle Link:
+    https://www.kaggle.com/datasets/vbookshelf/rice-leaf-diseases
+    Alternative:
+    https://www.kaggle.com/datasets/rahulgharat/rice-leaf-disease-image
+
+3.  Tomato Leaf Disease Dataset Description: Tomato diseases including
+    Early Blight, Late Blight, Leaf Mold, Mosaic Virus. Kaggle Link:
+    https://www.kaggle.com/datasets/kaustubhb999/tomatoleaf
+
+4.  Corn (Maize) Leaf Disease Dataset Description: Corn diseases such as
+    Rust, Northern Leaf Blight, Gray Leaf Spot. Kaggle Link:
+    https://www.kaggle.com/datasets/smaranjitghose/corn-or-maize-leaf-disease-dataset
+
+5.  Multi-Crop Field Images Dataset (Advanced / Real Field Conditions)
+    Roboflow Universe: https://universe.roboflow.com/ Search keyword:
+    “crop disease”
+
+Instructions to Download from Kaggle: 1. Create a Kaggle account. 2.
+Open the dataset link. 3. Click Download. 4. Extract the ZIP file. 5.
+Use images for training/testing your CNN model.
+
+Prepared for: Crop Disease Prediction Project

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat - AgriVistara</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dashboard-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--secondary-color);
+            color: var(--white);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar .logo {
+            color: var(--white);
+            margin-bottom: 40px;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar-menu a {
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background: var(--bg-light);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-container {
+            flex: 1;
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .chat-header {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 15px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--primary-color);
+            color: var(--white);
+            border-bottom-right-radius: 2px;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+            background: #f1f3f4;
+            color: var(--secondary-color);
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-input-area {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #ddd;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .chat-input-area button {
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 0 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chat-input-area button:hover {
+            opacity: 0.9;
+        }
+
+        .chat-input-area .btn-voice {
+            background: #ea4335;
+        }
+
+        .chat-input-area .btn-voice.active {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(234, 67, 53, 0.7);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(234, 67, 53, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(234, 67, 53, 0);
+            }
+        }
+
+        .voice-toggle {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            margin-top: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">AgriVistara</div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="disease.html"><i class="fas fa-leaf"></i> Disease Detection</a></li>
+                <li><a href="weather.html"><i class="fas fa-cloud-sun"></i> Weather</a></li>
+                <li><a href="market.html"><i class="fas fa-store"></i> Market</a></li>
+                <li><a href="#" class="active"><i class="fas fa-comments"></i> AI Chat</a></li>
+                <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="main-content">
+            <div class="top-bar"
+                style="background: var(--white); padding: 15px 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; align-items: center; gap: 20px;">
+                <div class="hamburger-menu" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <h2 style="margin: 0; font-size: 1.5rem;">AI Live Chat</h2>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-header">
+                    <i class="fas fa-robot"></i>
+                    <span>AgriVistara AI Assistant</span>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message ai">
+                        Hello! I'm your AI farming assistant. How can I help you today?
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Type your message here..."
+                        onkeypress="handleKeyPress(event)">
+                    <button id="start-voice" class="btn-voice" onclick="toggleVoiceInput()"><i
+                            class="fas fa-microphone"></i></button>
+                    <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+                <div style="padding: 0 20px 10px;">
+                    <label class="voice-toggle">
+                        <input type="checkbox" id="voice-output-toggle" checked>
+                        <span>Enable Voice Output (AI Speaks)</span>
+                    </label>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Google Translate -->
+    <div id="google_translate_element" style="position:fixed; bottom:20px; left:20px; z-index:1000;"></div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('full-width');
+        }
+
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const voiceOutputToggle = document.getElementById('voice-output-toggle');
+        const startVoiceBtn = document.getElementById('start-voice');
+
+        // Web Speech API - Speech Recognition
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+        let isListening = false;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                chatInput.value = transcript;
+                toggleVoiceInput();
+                sendMessage();
+            };
+
+            recognition.onerror = (event) => {
+                console.error("Speech Recognition Error:", event.error);
+                toggleVoiceInput();
+            };
+
+            recognition.onend = () => {
+                if (isListening) toggleVoiceInput();
+            };
+        }
+
+        function toggleVoiceInput() {
+            if (!recognition) {
+                alert("Speech recognition is not supported in this browser.");
+                return;
+            }
+
+            if (isListening) {
+                recognition.stop();
+                startVoiceBtn.classList.remove('active');
+                isListening = false;
+            } else {
+                recognition.start();
+                startVoiceBtn.classList.add('active');
+                isListening = true;
+            }
+        }
+
+        // Web Speech API - Text to Speech
+        function getSelectedLanguage() {
+            // Check for Google Translate cookie or select element
+            const cookieMatch = document.cookie.match(/googtrans=\/[^/]+\/([^;]+)/);
+            if (cookieMatch && cookieMatch[1]) return cookieMatch[1];
+
+            const combo = document.querySelector('.goog-te-combo');
+            if (combo && combo.value) return combo.value;
+
+            return 'en'; // Default
+        }
+
+        function speak(text) {
+            if (!voiceOutputToggle.checked) return;
+            const synth = window.speechSynthesis;
+            const utterance = new SpeechSynthesisUtterance(text);
+
+            // Map common language codes to speech codes
+            const langCode = getSelectedLanguage();
+            const langMap = {
+                'en': 'en-US',
+                'hi': 'hi-IN',
+                'ta': 'ta-IN',
+                'te': 'te-IN',
+                'ml': 'ml-IN',
+                'kn': 'kn-IN',
+                'gu': 'gu-IN',
+                'mr': 'mr-IN',
+                'bn': 'bn-IN',
+                'pa': 'pa-IN'
+            };
+
+            utterance.lang = langMap[langCode] || langCode;
+            utterance.pitch = 1;
+            utterance.rate = 1;
+            synth.speak(utterance);
+        }
+
+        function appendMessage(text, sender) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message', sender);
+            msgDiv.innerText = text;
+            chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            if (sender === 'ai') {
+                // Small delay to allow Google Translate to potentially translate the text if it's automatic
+                setTimeout(() => {
+                    const textToSpeak = msgDiv.innerText;
+                    speak(textToSpeak);
+                }, 500);
+            }
+        }
+
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            appendMessage(message, 'user');
+            chatInput.value = '';
+
+            try {
+                console.log("Sending message to backend...");
+                const response = await fetch('http://localhost:5000/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        lang: getSelectedLanguage() // Send current selected language
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("Response received:", data);
+                    appendMessage(data.response, 'ai');
+                } else {
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error("Server Error:", response.status, errorData);
+                    appendMessage(`Error (${response.status}): I'm having trouble connecting to the AI.`, 'ai');
+                }
+            } catch (error) {
+                console.error("Network Error:", error);
+                appendMessage("Network Error: Could not reach the backend server. Is it running on port 5000?", 'ai');
+            }
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        }
+    </script>
+</body>
+
+</html>

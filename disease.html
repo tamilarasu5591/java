@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disease Detection - AgriVistara</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dashboard-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--secondary-color);
+            color: var(--white);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar .logo {
+            color: var(--white);
+            margin-bottom: 40px;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar-menu a {
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background: var(--bg-light);
+            overflow-y: auto;
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+            background: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: #f0fdf4;
+        }
+
+        .upload-area i {
+            font-size: 50px;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        #preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+
+        .result-box h3 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .confidence-bar {
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0%;
+            transition: width 1s ease-out;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">AgriVistara</div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#" class="active"><i class="fas fa-leaf"></i> Disease Detection</a></li>
+                <li><a href="weather.html"><i class="fas fa-cloud-sun"></i> Weather</a></li>
+                <li><a href="market.html"><i class="fas fa-store"></i> Market</a></li>
+                <li><a href="chat.html"><i class="fas fa-comments"></i> AI Chat</a></li>
+                <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="main-content">
+
+            <div class="top-bar"
+                style="background: var(--white); padding: 15px 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; align-items: center; gap: 20px;">
+
+                <div class="hamburger-menu" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <h2 style="margin: 0; font-size: 1.5rem;">Identify Plant Disease</h2>
+            </div>
+
+            <div class="upload-area" onclick="document.getElementById('file-input').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Click to Upload Image</h3>
+                <p>Supported formats: JPG, PNG</p>
+                <input type="file" id="file-input" accept="image/*" onchange="previewImage(event)">
+            </div>
+
+            <img id="preview-image" src="" alt="Selected Image">
+
+            <button class="btn btn-primary" style="margin-top: 20px; width: 100%;" onclick="analyzeDisease()">Analyze
+                Image</button>
+
+            <div class="result-box" id="result-box">
+                <h3>Analysis Result</h3>
+                <p><strong>Detected Disease:</strong> <span id="disease-name">Analyzing...</span></p>
+                <p><strong>Treatment:</strong> <span id="treatment">...</span></p>
+                <div class="confidence-bar">
+                    <div class="confidence-fill" id="confidence-fill"></div>
+                </div>
+                <p style="text-align: right; font-size: 0.8rem; margin-top: 5px;" id="confidence-text"></p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Google Translate -->
+    <div id="google_translate_element" style="position:fixed; bottom:20px; left:20px; z-index:1000;"></div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- TensorFlow.js and MobileNet Model -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@1.0.0"> </script>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('full-width');
+        }
+
+        let model;
+        // Load the model
+        (async function () {
+            try {
+                console.log("Loading model...");
+                model = await mobilenet.load();
+                console.log("Model loaded");
+            } catch (error) {
+                console.error("Error loading model:", error);
+            }
+        })();
+
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const output = document.getElementById('preview-image');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            if (event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+
+        async function analyzeDisease() {
+            const fileInput = document.getElementById('file-input');
+            const imgElement = document.getElementById('preview-image');
+
+            if (fileInput.files.length === 0) {
+                alert("Please select an image first.");
+                return;
+            }
+
+            const resultBox = document.getElementById('result-box');
+            resultBox.style.display = 'block';
+            document.getElementById('disease-name').innerText = "Analyzing Image (AI)...";
+            document.getElementById('treatment').innerText = "...";
+            document.getElementById('confidence-text').innerText = "";
+            document.getElementById('confidence-fill').style.width = "0%";
+
+            // 1. Client-Side AI Analysis
+            try {
+                if (model && imgElement.src) {
+                    const predictions = await model.classify(imgElement);
+                    console.log('Predictions: ', predictions);
+
+                    if (predictions && predictions.length > 0) {
+                        // Display what AI sees
+                        document.getElementById('disease-name').innerText = `AI sees: ${predictions[0].className}`;
+                        document.getElementById('confidence-text').innerText = `Confidence: ${Math.round(predictions[0].probability * 100)}%`;
+                        document.getElementById('confidence-fill').style.width = `${Math.round(predictions[0].probability * 100)}%`;
+                    }
+                } else {
+                    console.log("Model not loaded or image not ready");
+                }
+            } catch (e) {
+                console.error("AI Error", e);
+            }
+
+            // 2. Send to Backend for "Diagnosis" (Mocked logic based on hash)
+            // Create FormData to send file
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            try {
+                const response = await fetch('http://localhost:5000/api/detect_disease', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Update only if backend returns valid disease info
+                    // We append the backend diagnosis to the AI classification
+                    setTimeout(() => {
+                        const currentText = document.getElementById('disease-name').innerText;
+                        document.getElementById('disease-name').innerHTML = `${currentText} <br><strong>Diagnosis: ${data.disease}</strong>`;
+                        document.getElementById('treatment').innerText = data.treatment;
+                    }, 1500); // Small delay for effect
+
+                } else {
+                    document.getElementById('treatment').innerText = "Error analyzing image.";
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('treatment').innerText = "Backend Error. Is server running?";
+            }
+        }
+    </script>
+</body>
+
+</html>

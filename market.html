@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Prices - AgriVistara</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dashboard-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--secondary-color);
+            color: var(--white);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar .logo {
+            color: var(--white);
+            margin-bottom: 40px;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar-menu a {
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background: var(--bg-light);
+            overflow-y: auto;
+        }
+
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .price-table th,
+        .price-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .price-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .trend-up {
+            color: #27ae60;
+        }
+
+        .trend-down {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">AgriVistara</div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="disease.html"><i class="fas fa-leaf"></i> Disease Detection</a></li>
+                <li><a href="weather.html"><i class="fas fa-cloud-sun"></i> Weather</a></li>
+                <li><a href="#" class="active"><i class="fas fa-store"></i> Market</a></li>
+                <li><a href="chat.html"><i class="fas fa-comments"></i> AI Chat</a></li>
+                <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="main-content">
+            <div class="top-bar"
+                style="background: var(--white); padding: 15px 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; align-items: center; gap: 20px;">
+                <div class="hamburger-menu" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div style="flex: 1; display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="margin: 0; font-size: 1.5rem;">Market Intelligence</h2>
+                    <p style="margin: 0; font-size: 0.8rem; color: #666;">Showing latest 100 records</p>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="http://localhost:5000/api/download_market_data" class="btn btn-secondary"><i
+                                class="fas fa-download"></i> Download Report</a>
+                        <button class="btn btn-primary" onclick="openSellModal()">+ Sell My Crop</button>
+                    </div>
+                </div>
+            </div>
+
+            <table class="price-table">
+                <thead>
+                    <tr>
+                        <th>Crop</th>
+                        <th>Price</th>
+                        <th>Atlanta</th>
+                        <th>Chicago</th>
+                        <th>Los Angeles</th>
+                        <th>New York</th>
+                        <th>Spread</th>
+                        <th>Trend</th>
+                    </tr>
+                </thead>
+                <tbody id="price-body">
+                    <tr>
+                        <td colspan="8">Loading prices...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <!-- Sell Modal -->
+    <div id="sellModal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
+        <div style="background:white; padding:30px; border-radius:10px; width:350px;">
+            <h3>Sell Your Produce</h3>
+            <input type="text" id="sell-crop" placeholder="Crop Name (e.g., Tomato)"
+                style="width:100%; margin:10px 0; padding:8px;">
+            <input type="number" id="sell-price" placeholder="Price ($)"
+                style="width:100%; margin:10px 0; padding:8px;">
+            <input type="text" id="sell-market" placeholder="Market Name"
+                style="width:100%; margin:10px 0; padding:8px;">
+            <button class="btn btn-primary" onclick="submitSell()">Post Listing</button>
+            <button class="btn btn-secondary" onclick="closeSellModal()" style="margin-top:10px;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Google Translate -->
+    <div id="google_translate_element" style="position:fixed; bottom:20px; left:20px; z-index:1000;"></div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('full-width');
+        }
+
+        async function loadPrices() {
+            try {
+                const response = await fetch('http://localhost:5000/api/market_prices');
+                if (response.ok) {
+                    const data = await response.json();
+                    const tbody = document.getElementById('price-body');
+                    let rowsHtml = [];
+                    data.forEach(item => {
+                        const trendIcon = item.trend === 'up' ? '<i class="fas fa-arrow-up trend-up"></i>' : (item.trend === 'down' ? '<i class="fas fa-arrow-down trend-down"></i>' : '<span style="color:blue;">New</span>');
+
+                        const farmPrice = Number(item.price) || 0;
+                        const atl = Number(item.atlanta_retail) || 0;
+                        const chi = Number(item.chicago_retail) || 0;
+                        const la = Number(item.la_retail) || 0;
+                        const ny = Number(item.new_york_retail) || 0;
+
+                        // Simple color coding for spread
+                        const isHighSpread = item.average_spread && parseFloat(item.average_spread) > 200;
+                        const spreadClass = isHighSpread ? 'style="color:red; font-weight:bold;"' : '';
+
+                        rowsHtml.push(`<tr>
+                            <td>${item.crop}</td>
+                            <td>$${farmPrice.toFixed(2)}</td>
+                            <td>$${atl.toFixed(2)}</td>
+                            <td>$${chi.toFixed(2)}</td>
+                            <td>$${la.toFixed(2)}</td>
+                            <td>$${ny.toFixed(2)}</td>
+                            <td ${spreadClass}>${item.average_spread || '0%'}</td>
+                            <td>${trendIcon}</td>
+                        </tr>`);
+                    });
+                    tbody.innerHTML = rowsHtml.join('');
+                } else {
+                    console.error("Failed to load prices: " + response.statusText);
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+                document.getElementById('price-body').innerHTML = '<tr><td colspan="8">Error loading market data. Please check if the backend is running.</td></tr>';
+            }
+        }
+
+        function openSellModal() { document.getElementById('sellModal').style.display = 'flex'; }
+        function closeSellModal() { document.getElementById('sellModal').style.display = 'none'; }
+
+        async function submitSell() {
+            const crop = document.getElementById('sell-crop').value;
+            const price = document.getElementById('sell-price').value;
+            const market = document.getElementById('sell-market').value;
+
+            if (!crop || !price || !market) { alert("Fill all fields"); return; }
+
+            const res = await fetch('http://localhost:5000/api/sell_crop', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ crop, price, market })
+            });
+
+            if (res.ok) {
+                alert("Listed Successfully!");
+                closeSellModal();
+                loadPrices(); // Refresh table
+            } else {
+                alert("Failed to list.");
+            }
+        }
+
+        window.onload = loadPrices;
+    </script>
+</body>
+
+</html>
