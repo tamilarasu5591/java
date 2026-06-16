@@ -1,0 +1,45 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+  GDB online is an online compiler and debugger tool for C, C++, Python, PHP, Ruby, 
+  C#, OCaml, VB, Perl, Swift, Prolog, Javascript, Pascal, COBOL, HTML, CSS, JS
+  Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+import java.util.Scanner;
+class matrixPattern {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = 3; 
+        int[][] arr = new int[n][n];
+        System.out.println("Enter matrix values:");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                arr[i][j] = sc.nextInt();
+            }
+        }
+        for (int sum = 0; sum <= 2 * (n - 1); sum++) {
+
+            if (sum % 2 == 0) {
+                for (int i = 0; i < n; i++) {
+                    int j = sum - i;
+                    if (j >= 0 && j < n) {
+                        System.out.print(arr[i][j]);
+                    }
+                }
+            } else {
+                for (int i = n - 1; i >= 0; i--) {
+                    int j = sum - i;
+                    if (j >= 0 && j < n) {
+                        System.out.print(arr[i][j]);
+                    }
+                }
+            }
+
+            if (sum != 2 * (n - 1)) {
+                System.out.print(",");
+            }
+        }
+        sc.close();
+    }
+}
