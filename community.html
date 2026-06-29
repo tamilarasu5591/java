@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Forum - AgriVistara</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard-layout.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .post-card {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        .post-card:hover {
+            transform: translateY(-2px);
+            background: rgba(30, 41, 59, 0.85);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .post-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .post-meta {
+            font-size: 0.8rem;
+            color: var(--text-slate);
+        }
+
+        .post-category {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .cat-tips {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+        }
+
+        .cat-pest {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+        }
+
+        .cat-success {
+            background: rgba(241, 196, 15, 0.15);
+            color: #f1c40f;
+        }
+
+        .cat-general {
+            background: rgba(52, 152, 219, 0.15);
+            color: #3498db;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 20px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-glass);
+        }
+
+        .post-actions button {
+            background: none;
+            border: none;
+            color: var(--text-slate);
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--font-main);
+            transition: color 0.2s;
+        }
+
+        .post-actions button:hover {
+            color: var(--primary-color);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border-glass);
+            background: var(--card-glass);
+            color: var(--text-slate);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: var(--font-main);
+            transition: var(--transition);
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .comment-box {
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--bg-midnight);
+            border-radius: 8px;
+            border: 1px solid var(--border-glass);
+        }
+
+        .comment-item {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.85rem;
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .delete-post-btn {
+            background: none;
+            border: none;
+            color: var(--text-white); /* Ensure it is visible against dark card */
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: var(--transition);
+            opacity: 0.8; /* Make base opacity higher */
+            margin-left: 10px;
+            font-size: 1.2rem; /* Larger for better hit area */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .delete-post-btn:hover {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            opacity: 1;
+            transform: scale(1.1) rotate(90deg); 
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">AgriVistara</div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html" data-i18n="nav_dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="soil.html" data-i18n="nav_soil"><i class="fas fa-flask"></i> Soil Health</a></li>
+                <li><a href="disease.html" data-i18n="nav_disease"><i class="fas fa-leaf"></i> Disease Detection</a></li>
+                <li><a href="weather.html" data-i18n="nav_weather"><i class="fas fa-cloud-sun"></i> Weather</a></li>
+                <li><a href="market.html" data-i18n="nav_market"><i class="fas fa-store"></i> Market</a></li>
+                <li><a href="chat.html" data-i18n="nav_chat"><i class="fas fa-comments"></i> AI Chat</a></li>
+                <li><a href="#" class="active" data-i18n="nav_community"><i class="fas fa-users"></i> Community</a></li>
+                <li><a href="schemes.html" data-i18n="nav_schemes"><i class="fas fa-hand-holding-usd"></i> Schemes</a></li>
+<li><a href="index.html" data-i18n="nav_logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content" id="main-content">
+            <div class="top-bar"
+                style="background:var(--bg-slate);padding:15px 25px;box-shadow:0 2px 10px rgba(0,0,0,0.3);margin-bottom:20px;display:flex;align-items:center;gap:20px;border-radius:10px;border:1px solid var(--border-glass);">
+                <div class="hamburger-menu" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+                <div style="flex:1;display:flex;justify-content:space-between;align-items:center;">
+                    <h2 style="margin:0;font-size:1.5rem;color:var(--text-white);"><i class="fas fa-users"
+                            style="color:var(--primary-color);margin-right:8px;"></i><span data-translate>Community Forum</span></h2>
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <div id="google_translate_element"></div>
+                        <button class="btn btn-primary" onclick="openPostModal()" data-translate>+ New Post</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterPosts('All', this)">All</button>
+                <button class="filter-btn" onclick="filterPosts('Tips', this)">💡 Tips</button>
+                <button class="filter-btn" onclick="filterPosts('Pest Alert', this)">🐛 Pest Alert</button>
+                <button class="filter-btn" onclick="filterPosts('Success Story', this)">🏆 Success</button>
+                <button class="filter-btn" onclick="filterPosts('General', this)">💬 General</button>
+            </div>
+
+            <div id="posts-feed">
+                <p style="color:var(--text-slate);">Loading posts...</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Post Modal -->
+    <div id="postModal"
+        style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:2000;">
+        <div
+            style="background:var(--bg-slate);padding:30px;border-radius:12px;width:420px;max-width:90%;border:1px solid var(--border-glass);color:var(--text-white);">
+            <h3 style="margin-bottom:15px;"><i class="fas fa-pen"
+                    style="color:var(--primary-color);margin-right:8px;"></i>Create Post</h3>
+            <input type="text" id="post-title" placeholder="Title"
+                style="width:100%;margin-bottom:10px;padding:10px;background:var(--bg-midnight);color:var(--text-white);border:1px solid var(--border-glass);border-radius:8px;">
+            <textarea id="post-content" rows="4" placeholder="Share your thoughts, tips, or alerts..."
+                style="width:100%;margin-bottom:10px;padding:10px;background:var(--bg-midnight);color:var(--text-white);border:1px solid var(--border-glass);border-radius:8px;resize:vertical;font-family:var(--font-main);"></textarea>
+            <select id="post-category"
+                style="width:100%;margin-bottom:15px;padding:10px;background:var(--bg-midnight);color:var(--text-white);border:1px solid var(--border-glass);border-radius:8px;font-family:var(--font-main);">
+                <option value="General">💬 General</option>
+                <option value="Tips">💡 Tips</option>
+                <option value="Pest Alert">🐛 Pest Alert</option>
+                <option value="Success Story">🏆 Success Story</option>
+            </select>
+            <div style="display:flex;gap:10px;">
+                <button class="btn btn-primary" style="flex:1;" onclick="submitPost()">Post</button>
+                <button class="btn btn-secondary"
+                    style="flex:1;background:var(--bg-midnight);color:var(--text-white);border:1px solid var(--border-glass);"
+                    onclick="closePostModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="i18n.js"></script>
+    <script>
+        function toggleSidebar() { document.querySelector('.sidebar').classList.toggle('collapsed'); document.getElementById('main-content').classList.toggle('full-width'); }
+        function showToast(m, t = 'info') { const d = document.createElement('div'); d.className = `toast ${t}`; d.textContent = m; document.body.appendChild(d); setTimeout(() => d.remove(), 3000); }
+        function openPostModal() { document.getElementById('postModal').style.display = 'flex'; }
+        function closePostModal() { document.getElementById('postModal').style.display = 'none'; }
+
+        function getCatClass(cat) {
+            if (cat === 'Tips') return 'cat-tips'; if (cat === 'Pest Alert') return 'cat-pest';
+            if (cat === 'Success Story') return 'cat-success'; return 'cat-general';
+        }
+
+        async function loadPosts(category = 'All') {
+            const feed = document.getElementById('posts-feed');
+            feed.innerHTML = '<p style="color:var(--text-slate);">Loading...</p>';
+            try {
+                const res = await authFetch(`${API_BASE}/api/forum?category=${category}`);
+                if (res && res.ok) {
+                    const posts = await res.json();
+                    const currentUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
+                    const currentUserPhone = currentUser.phone || '';
+                    const adminPhones = ['9876543210', 'admin', '1234567890'];
+
+                    if (posts.length === 0) { feed.innerHTML = '<div class="card" style="text-align:center;padding:40px;"><i class="fas fa-seedling" style="font-size:3rem;color:var(--primary-color);margin-bottom:10px;"></i><h3 style="color:var(--text-white);">No posts yet!</h3><p style="color:var(--text-slate);">Be the first to share something with the community.</p></div>'; return; }
+                    feed.innerHTML = posts.map(p => `
+                        <div class="post-card">
+                            <div class="post-header">
+                                <div class="post-author">
+                                    <div class="post-avatar">${(p.author_name || 'F').charAt(0).toUpperCase()}</div>
+                                    <div><strong style="color:var(--text-white);">${p.author_name}</strong><div class="post-meta">${new Date(p.timestamp).toLocaleDateString()}</div></div>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span class="post-category ${getCatClass(p.category)}">${p.category}</span>
+                                    <button class="delete-post-btn" onclick="deletePost(${p.id})" title="Remove Post"><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                            <h3 style="color:var(--text-white);margin-bottom:8px;">${p.title}</h3>
+                            <p style="color:var(--text-slate);font-size:0.9rem;line-height:1.5;">${p.content}</p>
+                            <div class="post-actions">
+                                <button onclick="likePost(${p.id})"><i class="fas fa-heart"></i> ${p.likes || 0}</button>
+                                <button onclick="toggleComments(${p.id})"><i class="fas fa-comment"></i> ${p.comment_count || 0} Comments</button>
+                            </div>
+                            <div id="comments-${p.id}" style="display:none;"></div>
+                        </div>
+                    `).join('');
+                }
+            } catch (e) { feed.innerHTML = '<p style="color:#e74c3c;">Error loading posts</p>'; }
+        }
+
+        async function deletePost(postId) {
+            if (!confirm('Are you sure you want to cancel/remove this post? This action cannot be undone.')) return;
+            try {
+                const res = await authFetch(`${API_BASE}/api/forum/${postId}`, { method: 'DELETE' });
+                if (res && res.ok) {
+                    showToast('Post removed successfully', 'success');
+                    loadPosts();
+                } else {
+                    const err = await res.json();
+                    showToast(err.error || 'Failed to delete post', 'error');
+                }
+            } catch (e) {
+                showToast('Connection error', 'error');
+            }
+        }
+
+        function filterPosts(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            loadPosts(cat);
+        }
+
+        async function submitPost() {
+            const title = document.getElementById('post-title').value.trim();
+            const content = document.getElementById('post-content').value.trim();
+            const category = document.getElementById('post-category').value;
+            if (!title || !content) { showToast('Please fill all fields', 'error'); return; }
+            try {
+                const res = await authFetch(`${API_BASE}/api/forum`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title, content, category }) });
+                if (res && res.ok) { showToast('Post created!', 'success'); closePostModal(); loadPosts(); document.getElementById('post-title').value = ''; document.getElementById('post-content').value = ''; }
+            } catch (e) { showToast('Error creating post', 'error'); }
+        }
+
+        async function likePost(id) {
+            try { await authFetch(`${API_BASE}/api/forum/${id}/like`, { method: 'POST' }); loadPosts(); } catch (e) { }
+        }
+
+        async function toggleComments(postId) {
+            const div = document.getElementById(`comments-${postId}`);
+            if (div.style.display === 'block') { div.style.display = 'none'; return; }
+            div.style.display = 'block';
+            div.innerHTML = '<p style="color:var(--text-slate);font-size:0.85rem;">Loading comments...</p>';
+            try {
+                const res = await authFetch(`${API_BASE}/api/forum/${postId}/comments`);
+                if (res && res.ok) {
+                    const comments = await res.json();
+                    let html = comments.map(c => `<div class="comment-item"><strong style="color:var(--primary-color);">${c.author_name}</strong><span style="color:var(--text-slate);margin-left:8px;font-size:0.75rem;">${new Date(c.timestamp).toLocaleDateString()}</span><p style="color:var(--text-slate);margin-top:4px;">${c.content}</p></div>`).join('');
+                    html += `<div style="display:flex;gap:8px;margin-top:10px;"><input type="text" id="comment-input-${postId}" placeholder="Write a comment..." style="flex:1;padding:8px;background:var(--bg-slate);color:var(--text-white);border:1px solid var(--border-glass);border-radius:6px;"><button class="btn btn-primary" style="padding:8px 16px;" onclick="addComment(${postId})">Post</button></div>`;
+                    div.innerHTML = `<div class="comment-box">${html}</div>`;
+                }
+            } catch (e) { div.innerHTML = '<p style="color:#e74c3c;">Error loading comments</p>'; }
+        }
+
+        async function addComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const content = input.value.trim();
+            if (!content) return;
+            try {
+                const res = await authFetch(`${API_BASE}/api/forum/${postId}/comment`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content }) });
+                if (res && res.ok) { loadPosts(); }
+            } catch (e) { }
+        }
+
+        window.onload = () => loadPosts();
+    </script>
+
+    <nav class="bottom-nav">
+        <a href="dashboard.html"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="market.html"><i class="fas fa-store"></i><span>Market</span></a>
+        <a href="chat.html"><i class="fas fa-comments"></i><span>Chat</span></a>
+        <a href="community.html" class="active"><i class="fas fa-users"></i><span>Forum</span></a>
+        <a href="schemes.html"><i class="fas fa-hand-holding-usd"></i><span>Schemes</span></a>
+    </nav>
+    <script src="google-translate.js"></script>
+</body>
+
+</html>

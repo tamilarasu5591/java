@@ -6,74 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Support - AgriVistara</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard-layout.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .dashboard-container {
-            display: flex;
-            height: 100vh;
-        }
-
-        .sidebar {
-            width: 250px;
-            background: var(--secondary-color);
-            color: var(--white);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar .logo {
-            color: var(--white);
-            margin-bottom: 40px;
-        }
-
-        .sidebar-menu li {
-            margin-bottom: 15px;
-        }
-
-        .sidebar-menu a {
-            color: rgba(255, 255, 255, 0.7);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            transition: var(--transition);
-        }
-
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background: var(--primary-color);
-            color: var(--white);
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 30px;
-            background: var(--bg-light);
-            overflow-y: auto;
-        }
-
         .support-card {
-            background: var(--white);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            background: var(--card-glass);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             max-width: 600px;
             margin: 0 auto;
             text-align: center;
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(10px);
+            color: var(--text-white);
         }
 
         .contact-item {
             margin: 20px 0;
             padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
+            background: var(--bg-slate);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 15px;
+            border: 1px solid var(--border-glass);
         }
 
         .contact-icon {
@@ -83,42 +42,45 @@
 
         .contact-info h4 {
             margin: 0;
-            color: var(--secondary-color);
+            color: var(--text-slate);
         }
 
         .contact-info p {
             margin: 5px 0 0;
             font-size: 1.1rem;
             font-weight: 600;
-            color: #333;
+            color: var(--text-white);
         }
     </style>
 </head>
 
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar -->
+        <!-- Sidebar (Fixed: removed duplicate AI Chat entry) -->
         <aside class="sidebar">
             <div class="logo">AgriVistara</div>
             <ul class="sidebar-menu">
-                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="disease.html"><i class="fas fa-leaf"></i> Disease Detection</a></li>
-                <li><a href="weather.html"><i class="fas fa-cloud-sun"></i> Weather</a></li>
-                <li><a href="market.html"><i class="fas fa-store"></i> Market</a></li>
-                <li><a href="chat.html"><i class="fas fa-comments"></i> AI Chat</a></li>
-                <li><a href="chat.html"><i class="fas fa-comments"></i> AI Chat</a></li>
-                <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a href="dashboard.html" data-i18n="nav_dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="soil.html" data-i18n="nav_soil"><i class="fas fa-flask"></i> Soil Health</a></li>
+                <li><a href="disease.html" data-i18n="nav_disease"><i class="fas fa-leaf"></i> Disease Detection</a></li>
+                <li><a href="weather.html" data-i18n="nav_weather"><i class="fas fa-cloud-sun"></i> Weather</a></li>
+                <li><a href="market.html" data-i18n="nav_market"><i class="fas fa-store"></i> Market</a></li>
+                <li><a href="chat.html" data-i18n="nav_chat"><i class="fas fa-comments"></i> AI Chat</a></li>
+                <li><a href="community.html" data-i18n="nav_community"><i class="fas fa-users"></i> Community</a></li>
+                <li><a href="schemes.html" data-i18n="nav_schemes"><i class="fas fa-hand-holding-usd"></i> Schemes</a></li>
+<li><a href="index.html" data-i18n="nav_logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content" id="main-content">
             <div class="top-bar"
-                style="background: var(--white); padding: 15px 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; align-items: center; gap: 20px;">
+                style="background: var(--bg-slate); padding: 15px 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); margin-bottom: 20px; display: flex; align-items: center; gap: 20px; border-radius: 10px; border: 1px solid var(--border-glass);">
                 <div class="hamburger-menu" onclick="toggleSidebar()">
                     <i class="fas fa-bars"></i>
                 </div>
                 <h2 style="margin: 0; font-size: 1.5rem;">Help & Support</h2>
+                <div style="margin-left:auto;"><div id="google_translate_element"></div></div>
             </div>
 
             <div class="support-card">
@@ -147,13 +109,9 @@
         </main>
     </div>
 
-    <!-- Google Translate -->
-    <div id="google_translate_element" style="position:fixed; bottom:20px; left:20px; z-index:1000;"></div>
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
-        }
 
+
+    <script>
         function toggleSidebar() {
             const sidebar = document.querySelector('.sidebar');
             const mainContent = document.getElementById('main-content');
@@ -161,9 +119,7 @@
             mainContent.classList.toggle('full-width');
         }
     </script>
-    <script type="text/javascript"
-        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
+    <script src="google-translate.js"></script>
 </body>
 
 </html>

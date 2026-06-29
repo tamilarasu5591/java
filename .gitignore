@@ -12,3 +12,11 @@ ENV/
 database.xlsx
 ProductPriceIndex.csv
 crop disease dataset/
+*.log
+*.txt
+*.xlsx
+Multi-Crop Disease Dataset/
+archive/
+java/
+backend/agri_cache/
+New folder/

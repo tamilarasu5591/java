@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - AgriVistara</title>
+    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="dashboard-layout.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .profile-card {
+            background: var(--card-glass);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(10px);
+            color: var(--text-white);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            color: white;
+            font-weight: 700;
+        }
+
+        .profile-form .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .profile-form label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--text-slate);
+            font-size: 0.9rem;
+        }
+
+        .profile-form input,
+        .profile-form select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: var(--font-main);
+            background: var(--bg-slate);
+            color: var(--text-white);
+            transition: var(--transition);
+        }
+
+        .profile-form input:focus,
+        .profile-form select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .profile-form.view-mode input,
+        .profile-form.view-mode select {
+            pointer-events: none;
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text-slate);
+            border-color: transparent;
+        }
+
+        .profile-form.view-mode #btn-save-profile {
+            display: none;
+        }
+
+        .profile-form.edit-mode #btn-edit-profile {
+            display: none;
+        }
+
+        .profile-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-info h3 {
+            margin: 0;
+            color: var(--text-white);
+        }
+
+        .profile-info p {
+            color: var(--text-slate);
+            font-size: 0.9rem;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-box {
+            background: var(--bg-slate);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--border-glass);
+        }
+
+        .stat-box .stat-num {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-box .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-slate);
+            margin-top: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">AgriVistara</div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="disease.html"><i class="fas fa-leaf"></i> Disease Detection</a></li>
+                <li><a href="weather.html"><i class="fas fa-cloud-sun"></i> Weather</a></li>
+                <li><a href="market.html"><i class="fas fa-store"></i> Market</a></li>
+                <li><a href="chat.html"><i class="fas fa-comments"></i> AI Chat</a></li>
+                <li><a href="community.html"><i class="fas fa-users"></i> Community</a></li>
+                <li><a href="schemes.html"><i class="fas fa-hand-holding-usd"></i> Schemes</a></li>
+<li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="main-content">
+            <div class="top-bar"
+                style="background: var(--bg-slate); padding: 15px 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); margin-bottom: 20px; display: flex; align-items: center; gap: 20px; border-radius: 10px; border: 1px solid var(--border-glass);">
+                <div class="hamburger-menu" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <h2 style="margin: 0; font-size: 1.5rem; color: var(--text-white);">My Profile</h2>
+                <div style="margin-left:auto;"><div id="google_translate_element"></div></div>
+            </div>
+
+            <div class="profile-card">
+                <div class="profile-avatar" id="profile-avatar">F</div>
+                <div class="profile-info">
+                    <h3 id="profile-name-display">Farmer</h3>
+                    <p id="profile-phone-display">Phone: —</p>
+                    <p id="profile-email-display" style="margin-top: 5px; color: var(--text-slate); font-size: 0.9rem;">
+                        Email: —</p>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-box">
+                        <div class="stat-num" id="stat-soil-tests">0</div>
+                        <div class="stat-label">Soil Tests</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-num" id="stat-detections">0</div>
+                        <div class="stat-label">Detections</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-num" id="stat-listings">0</div>
+                        <div class="stat-label">Listings</div>
+                    </div>
+                </div>
+
+                <div class="profile-form">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="profile-name" placeholder="Your Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="profile-email" placeholder="e.g., farmer@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>District</label>
+                        <input type="text" id="profile-district" placeholder="e.g., Salem, Coimbatore">
+                    </div>
+                    <div class="form-group">
+                        <label>State</label>
+                        <select id="profile-state">
+                            <option value="">Select State</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="West Bengal">West Bengal</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Preferred Language</label>
+                        <select id="profile-language">
+                            <option value="en">English</option>
+                            <option value="ta">Tamil (தமிழ்)</option>
+                            <option value="hi">Hindi (हिन्दी)</option>
+                            <option value="te">Telugu (తెలుగు)</option>
+                            <option value="kn">Kannada (ಕನ್ನಡ)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Farm Size (Acres)</label>
+                        <input type="number" id="profile-farm-size" placeholder="e.g., 2.5" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Crops Grown</label>
+                        <input type="text" id="profile-crops" placeholder="e.g., Rice, Tomato, Sugarcane">
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-secondary"
+                            style="width: 100%; min-height: 48px; background: var(--bg-midnight); color: var(--text-white); border: 1px solid var(--border-glass);"
+                            id="btn-edit-profile" onclick="toggleEditMode(true)">Edit Profile</button>
+                        <button class="btn btn-primary" style="width: 100%; min-height: 48px;" id="btn-save-profile"
+                            onclick="saveProfile()">Save Profile</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+
+    <script src="config.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('full-width');
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function toggleEditMode(isEdit) {
+            const form = document.querySelector('.profile-form');
+            if (isEdit) {
+                form.classList.remove('view-mode');
+                form.classList.add('edit-mode');
+                document.getElementById('profile-name').focus();
+            } else {
+                form.classList.remove('edit-mode');
+                form.classList.add('view-mode');
+            }
+        }
+
+        // Load profile data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            let hasData = false;
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                try {
+                    const user = JSON.parse(userStr);
+                    document.getElementById('profile-name').value = user.name || '';
+                    document.getElementById('profile-name-display').textContent = user.name || 'Farmer';
+                    document.getElementById('profile-phone-display').textContent = `Phone: ${user.phone || '—'}`;
+                    document.getElementById('profile-avatar').textContent = (user.name || 'F').charAt(0).toUpperCase();
+                    if (user.name || user.phone) hasData = true;
+
+                    // Load extended profile from localStorage
+                    const profile = JSON.parse(localStorage.getItem('profile') || '{}');
+                    document.getElementById('profile-email').value = profile.email || '';
+                    document.getElementById('profile-email-display').textContent = profile.email ? `Email: ${profile.email}` : '';
+                    document.getElementById('profile-district').value = profile.district || '';
+                    document.getElementById('profile-state').value = profile.state || '';
+                    document.getElementById('profile-language').value = profile.preferred_lang || 'en';
+                    document.getElementById('profile-farm-size').value = profile.farm_size || '';
+                    document.getElementById('profile-crops').value = profile.crops_grown || '';
+
+                    if (profile.district || profile.state) hasData = true;
+                } catch (e) {
+                    console.error("Error loading profile", e);
+                }
+            }
+
+            // Set initial mode based on whether data exists
+            toggleEditMode(!hasData);
+        });
+
+        function saveProfile() {
+            const btn = document.getElementById('btn-save-profile');
+            btn.classList.add('loading');
+            btn.textContent = 'Saving...';
+
+            const email = document.getElementById('profile-email').value.trim();
+
+            const profile = {
+                email: email,
+                district: document.getElementById('profile-district').value.trim(),
+                state: document.getElementById('profile-state').value,
+                preferred_lang: document.getElementById('profile-language').value,
+                farm_size: document.getElementById('profile-farm-size').value,
+                crops_grown: document.getElementById('profile-crops').value.trim()
+            };
+
+            // Save to localStorage (future: save to backend via PUT /api/v1/profile)
+            localStorage.setItem('profile', JSON.stringify(profile));
+
+            // Update name in user object too
+            const name = document.getElementById('profile-name').value.trim();
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                try {
+                    const user = JSON.parse(userStr);
+                    user.name = name;
+                    localStorage.setItem('user', JSON.stringify(user));
+                } catch (e) { }
+            }
+
+            document.getElementById('profile-name-display').textContent = name || 'Farmer';
+            document.getElementById('profile-email-display').textContent = email ? `Email: ${email}` : '';
+            document.getElementById('profile-avatar').textContent = (name || 'F').charAt(0).toUpperCase();
+
+            setTimeout(() => {
+                showToast('Profile saved successfully!', 'success');
+                btn.classList.remove('loading');
+                btn.textContent = 'Save Profile';
+                toggleEditMode(false);
+            }, 500);
+        }
+    </script>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="market.html"><i class="fas fa-store"></i><span>Market</span></a>
+        <a href="chat.html"><i class="fas fa-comments"></i><span>Chat</span></a>
+        <a href="weather.html"><i class="fas fa-cloud-sun"></i><span>Weather</span></a>
+        <a href="disease.html"><i class="fas fa-leaf"></i><span>Detect</span></a>
+    </nav>
+    <script src="google-translate.js"></script>
+</body>
+
+</html>

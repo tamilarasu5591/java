@@ -17,17 +17,17 @@ Mealybugs,"Dab with alcohol, spray insecticidal soap."
 Cashew anthracnose,"Prune infected parts, use copper-based fungicides."
 Cashew gumosis,"Improve drainage, apply Bordeaux paste to stems."
 Cashew healthy,"Keep monitoring, maintain proper spacing."
-Cashew leaf miner,"Use Neem oil or systemic insecticides."
+Cashew leaf miner,Use Neem oil or systemic insecticides.
 Cashew red rust,"Improve air circulation, use sulfur fungicides."
 Cassava bacterial blight,"Use healthy planting material, rotate crops."
 Cassava brown spot,"Plant resistant varieties, remove infected leaves."
-Cassava green mite,"Use predatory mites or biological controls."
+Cassava green mite,Use predatory mites or biological controls.
 Cassava healthy,"Keep monitoring, water regularly."
 Cassava mosaic,"Use disease-free stems, control whiteflies."
-Maize fall armyworm,"Apply Neem-based pesticides or biological controls."
+Maize fall armyworm,Apply Neem-based pesticides or biological controls.
 Maize grasshoper,"Maintain field sanitation, use bird-friendly habitats."
 Maize healthy,"Keep monitoring, ensure proper fertilization."
-Maize leaf beetle,"Spray soapy water or use recommended insecticides."
+Maize leaf beetle,Spray soapy water or use recommended insecticides.
 Maize leaf blight,"Use host-resistant hybrids, rotate crops."
 Maize leaf spot,"Avoid overhead irrigation, use fungicides if severe."
 Maize streak virus,"Control leafhoppers, plant resistant varieties."
@@ -36,3 +36,45 @@ Tomato leaf blight,"Apply copper-based fungicides, improve spacing."
 Tomato leaf curl,"Control whiteflies, use reflective mulches."
 Tomato septoria leaf spot,"Remove lower leaves, avoid overhead watering."
 Tomato verticulium wilt,"Improve soil drainage, plant resistant varieties."
+American Bollworm on Cotton,Use pheromone traps and recommended insecticides like NPV.
+Anthracnose on Cotton,"Remove infected leaves, use copper-based fungicides."
+Army worm,Spray Bacillus thuringiensis (Bt) or use deep plowing.
+Bacterial Blight in Rice,"Avoid excess nitrogen, use resistant varieties and copper fungicides."
+Brownspot,"Ensure proper nutrition, apply Mancozeb or Edifenphos."
+Common Rust,Apply fungicides containing chlorothalonil or mancozeb.
+Cotton Aphid,"Use insecticidal soaps, neem oil, or promote natural predators like ladybugs."
+Flag Smut,Treat seeds with fungicides like carboxin before sowing.
+Gray Leaf Spot,Rotate crops and use foliar fungicides if severe.
+Healthy Maize,"Keep monitoring, maintain proper soil health."
+Healthy Wheat,"Keep monitoring, ensure adequate watering."
+Healthy cotton,"Keep monitoring, maintain proper spacing."
+Leaf Curl,Control whiteflies using sticky traps and insecticidal soaps.
+Leaf smut,Use disease-free seeds and apply seed treatment fungicides.
+Mosaic sugarcane,"Use virus-free cutting materials, control aphid vectors."
+RedRot sugarcane,"Remove infected plants, avoid waterlogging, use healthy setts."
+RedRust sugarcane,Apply sulfur-based fungicides and improve drainage.
+Rice Blast,"Avoid excess nitrogen, use Tricyclazole or validamycin."
+Sugarcane Healthy,"Keep monitoring, ensure timely irrigation."
+Tungro,"Control green leafhoppers, use resistant varieties."
+Wheat Brown leaf Rust,"Use resistant varieties, apply foliar fungicides like tebuconazole."
+Wheat Stem fly,"Adjust sowing dates, use systemic insecticides."
+Wheat aphid,Use botanical extracts like neem oil or systemic insecticides.
+Wheat black rust,"Use resistant varieties, apply fungicides promptly."
+Wheat leaf blight,"Use disease-free seeds, practice crop rotation."
+Wheat mite,Apply specific miticides or wettable sulfur.
+Wheat powdery mildew,Apply sulfur dust or systemic fungicides.
+Wheat scab,"Avoid excessive irrigation during flowering, apply fungicides."
+Wheat Yellow Rust,"Use resistant seeds, spray propiconazole."
+Wilt,"Improve soil drainage, practice long crop rotations."
+Yellow Rust Sugarcane,Apply fungicides and use resistant varieties.
+bacterial blight in Cotton,"Use acid-delinted seeds, spray copper bactericides."
+bollrot on Cotton,"Ensure proper spacing for sunlight, avoid excessive nitrogen."
+bollworm on Cotton,"Use Bt cotton varieties, apply recommended insecticides."
+cotton mealy bug,"Prune infested parts, spray neem oil or systemic insecticides."
+cotton whitefly,"Use yellow sticky traps, spray neem oil or insecticidal soap."
+maize ear rot,"Store grains properly at low moisture, deep plow residues."
+maize fall armyworm,Apply Bacillus thuringiensis (Bt) or recommended bio-pesticides.
+maize stem borer,"Use light traps, apply granular insecticides in leaf whorls."
+pink bollworm in cotton,"Plow fields deeply after harvest, use pheromone traps."
+red cotton bug,"Maintain field sanitation, use appropriate chemical sprays."
+thirps on cotton,Spray dimethoate or neem seed kernel extract.

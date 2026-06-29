@@ -5,84 +5,367 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market Prices - AgriVistara</title>
+    <meta name="description" content="AgriVistara Market Intelligence - Live vegetable and crop prices across multiple markets. Update and track prices in real-time.">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard-layout.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .dashboard-container {
-            display: flex;
-            height: 100vh;
+        /* ========== Matrix Table Styles ========== */
+        .matrix-container {
+            overflow-x: auto;
+            border-radius: 14px;
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) transparent;
         }
 
-        .sidebar {
-            width: 250px;
-            background: var(--secondary-color);
-            color: var(--white);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
+        .matrix-container::-webkit-scrollbar {
+            height: 6px;
+        }
+        .matrix-container::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 3px;
         }
 
-        .sidebar .logo {
-            color: var(--white);
-            margin-bottom: 40px;
+        .price-matrix {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-glass);
+            color: var(--text-white);
+            min-width: 600px;
         }
 
-        .sidebar-menu li {
-            margin-bottom: 15px;
+        .price-matrix thead th {
+            background: linear-gradient(135deg, rgba(30,41,59,0.95), rgba(15,23,42,0.95));
+            font-weight: 600;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            letter-spacing: 1.2px;
+            padding: 14px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            white-space: nowrap;
+            border-bottom: 2px solid var(--primary-color);
         }
 
-        .sidebar-menu a {
-            color: rgba(255, 255, 255, 0.7);
+        .price-matrix thead th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 11;
+            background: linear-gradient(135deg, rgba(30,41,59,1), rgba(15,23,42,1));
+            min-width: 140px;
+        }
+
+        .price-matrix tbody td {
+            padding: 12px 16px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            transition: background 0.2s ease, transform 0.15s ease;
+            font-variant-numeric: tabular-nums;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .price-matrix tbody td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-white);
+            position: sticky;
+            left: 0;
+            background: var(--card-glass);
+            cursor: default;
+            white-space: nowrap;
+            min-width: 140px;
+        }
+
+        .price-matrix tbody tr:hover {
+            background: rgba(46, 204, 113, 0.06);
+        }
+
+        .price-matrix tbody td:not(:first-child):hover {
+            background: rgba(46, 204, 113, 0.15);
+            box-shadow: inset 0 0 0 2px rgba(46, 204, 113, 0.3);
+            border-radius: 6px;
+        }
+
+        /* Price cell content */
+        .cell-price {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .cell-empty {
+            color: rgba(255,255,255,0.25);
+            font-style: italic;
+            font-size: 0.85rem;
+        }
+
+        /* Inline editing */
+        .cell-editing {
+            padding: 4px !important;
+        }
+
+        .cell-editing input {
+            width: 80px;
+            padding: 6px 8px;
+            border: 2px solid var(--primary-color);
+            border-radius: 6px;
+            background: var(--bg-midnight);
+            color: var(--text-white);
+            font-size: 0.9rem;
+            font-family: inherit;
+            text-align: center;
+            outline: none;
+            animation: editPulse 0.3s ease;
+        }
+
+        @keyframes editPulse {
+            0% { transform: scale(0.9); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .cell-editing input:focus {
+            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.25);
+        }
+
+
+
+        /* ========== Modal Styles ========== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, rgba(30,41,59,0.98), rgba(15,23,42,0.98));
+            padding: 30px;
+            border-radius: 16px;
+            width: 400px;
+            max-width: 90%;
+            border: 1px solid var(--border-glass);
+            color: var(--text-white);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-content h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            transition: var(--transition);
         }
 
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background: var(--primary-color);
-            color: var(--white);
+        .modal-content h3 i {
+            color: var(--primary-color);
         }
 
-        .main-content {
-            flex: 1;
-            padding: 30px;
-            background: var(--bg-light);
-            overflow-y: auto;
+        .modal-subtitle {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+            margin-bottom: 20px;
         }
 
-        .price-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--white);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        .form-group {
+            margin-bottom: 16px;
         }
 
-        .price-table th,
-        .price-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        .price-table th {
-            background: #f8f9fa;
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
             font-weight: 600;
-            color: var(--secondary-color);
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .trend-up {
-            color: #27ae60;
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-midnight);
+            color: var(--text-white);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            box-sizing: border-box;
         }
 
-        .trend-down {
-            color: #e74c3c;
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.15);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        .form-group .new-option-hint {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.35);
+            margin-top: 4px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+            padding: 11px 20px;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .modal-actions .btn-primary {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .modal-actions .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.35);
+        }
+
+        .modal-actions .btn-secondary {
+            background: rgba(255,255,255,0.08);
+            color: var(--text-white);
+            border: 1px solid var(--border-glass);
+        }
+
+        .modal-actions .btn-secondary:hover {
+            background: rgba(255,255,255,0.12);
+        }
+
+        /* Action badge */
+        .action-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .action-badge.updated { background: rgba(46,204,113,0.2); color: #2ecc71; }
+        .action-badge.new_vegetable { background: rgba(52,152,219,0.2); color: #3498db; }
+        .action-badge.new_market { background: rgba(155,89,182,0.2); color: #9b59b6; }
+        .action-badge.new_both { background: rgba(241,196,15,0.2); color: #f1c40f; }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 14px 22px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            z-index: 9999;
+            animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            max-width: 350px;
+        }
+
+        .toast.success { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .toast.error { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .toast.info { background: linear-gradient(135deg, #3498db, #2980b9); }
+
+        @keyframes toastIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes toastOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* Loading skeleton */
+        .skeleton-row td {
+            background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            height: 20px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Cell tooltip */
+        .cell-tooltip {
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.85);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 20;
+            animation: fadeIn 0.15s ease;
+        }
+
+        /* Responsive */
+        /* Spread Badges */
+        .spread-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .spread-low { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }
+        .spread-mid { background: rgba(241, 196, 15, 0.2); color: #f1c40f; }
+        .spread-high { background: rgba(231, 76, 60, 0.2); color: #e74c3c; }
+
+        @media (max-width: 768px) {
+            .matrix-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -93,82 +376,138 @@
         <aside class="sidebar">
             <div class="logo">AgriVistara</div>
             <ul class="sidebar-menu">
-                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="disease.html"><i class="fas fa-leaf"></i> Disease Detection</a></li>
-                <li><a href="weather.html"><i class="fas fa-cloud-sun"></i> Weather</a></li>
-                <li><a href="#" class="active"><i class="fas fa-store"></i> Market</a></li>
-                <li><a href="chat.html"><i class="fas fa-comments"></i> AI Chat</a></li>
-                <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a href="dashboard.html" data-i18n="nav_dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="soil.html" data-i18n="nav_soil"><i class="fas fa-flask"></i> Soil Health</a></li>
+                <li><a href="disease.html" data-i18n="nav_disease"><i class="fas fa-leaf"></i> Disease Detection</a>
+                </li>
+                <li><a href="weather.html" data-i18n="nav_weather"><i class="fas fa-cloud-sun"></i> Weather</a></li>
+                <li><a href="#" class="active" data-i18n="nav_market"><i class="fas fa-store"></i> Market</a></li>
+                <li><a href="chat.html" data-i18n="nav_chat"><i class="fas fa-comments"></i> AI Chat</a></li>
+                <li><a href="community.html"><i class="fas fa-users"></i> Community</a></li>
+                <li><a href="schemes.html"><i class="fas fa-hand-holding-usd"></i> Schemes</a></li>
+                <li><a href="index.html" data-i18n="nav_logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content" id="main-content">
+            <!-- Top Bar -->
             <div class="top-bar"
-                style="background: var(--white); padding: 15px 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; align-items: center; gap: 20px;">
+                style="background: var(--bg-slate); padding: 15px 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); margin-bottom: 20px; display: flex; align-items: center; gap: 20px; border-radius: 10px; border: 1px solid var(--border-glass);">
                 <div class="hamburger-menu" onclick="toggleSidebar()">
                     <i class="fas fa-bars"></i>
                 </div>
-                <div style="flex: 1; display: flex; justify-content: space-between; align-items: center;">
-                    <h2 style="margin: 0; font-size: 1.5rem;">Market Intelligence</h2>
-                    <p style="margin: 0; font-size: 0.8rem; color: #666;">Showing latest 100 records</p>
-                    <div style="display: flex; gap: 10px;">
-                        <a href="http://localhost:5000/api/download_market_data" class="btn btn-secondary"><i
-                                class="fas fa-download"></i> Download Report</a>
-                        <button class="btn btn-primary" onclick="openSellModal()">+ Sell My Crop</button>
+                <div style="flex: 1; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <h2 style="margin: 0; font-size: 1.5rem; color: var(--text-white);" data-translate>Market Intelligence</h2>
+                        <div id="google_translate_element"></div>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <a id="download-link" class="btn btn-secondary" data-translate><i class="fas fa-download"></i> Download Report</a>
+                        <button class="btn btn-primary" id="btn-open-modal" onclick="openPriceModal()" data-translate>
+                            <i class="fas fa-plus-circle"></i> Add/Update Price
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <table class="price-table">
-                <thead>
-                    <tr>
-                        <th>Crop</th>
-                        <th>Price</th>
-                        <th>Atlanta</th>
-                        <th>Chicago</th>
-                        <th>Los Angeles</th>
-                        <th>New York</th>
-                        <th>Spread</th>
-                        <th>Trend</th>
-                    </tr>
-                </thead>
-                <tbody id="price-body">
-                    <tr>
-                        <td colspan="8">Loading prices...</td>
-                    </tr>
-                </tbody>
-            </table>
+
+
+            <!-- Market Rate Graph & Stats -->
+            <div style="margin-bottom: 25px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                    <h3 style="margin:0; color:var(--text-white);"><i class="fas fa-chart-line" style="color:var(--primary-color); margin-right:8px;"></i>Market Rate Analysis</h3>
+                    <select id="chart-veg-select" onchange="updateChart()" style="padding: 8px 14px; border: 1px solid var(--border-glass); border-radius: 8px; background: var(--bg-slate); color: var(--text-white); font-family: inherit; width: 220px; outline: none;">
+                        <option value="">Select a Crop...</option>
+                    </select>
+                </div>
+
+                <!-- Stats Summary Cards -->
+                <div class="card-grid" style="margin-bottom: 20px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <div class="card" style="border-left: 4px solid #3498db;">
+                        <h3 style="font-size: 0.8rem;"><i class="fas fa-calculator" style="margin-right: 6px;"></i>Avg Market Rate</h3>
+                        <div class="stat-value" id="stat-avg-price">--</div>
+                        <p style="font-size: 0.8rem; color: var(--text-slate); margin-top: 5px;">₹/kg across markets</p>
+                    </div>
+                    <div class="card" style="border-left: 4px solid #2ecc71;">
+                        <h3 style="font-size: 0.8rem;"><i class="fas fa-arrow-up" style="margin-right: 6px;"></i>Highest Price</h3>
+                        <div class="stat-value" id="stat-high-price" style="font-size: 1.5rem;">--</div>
+                        <p id="stat-high-market" style="font-size: 0.8rem; color: var(--text-slate); margin-top: 5px;">Market name</p>
+                    </div>
+                    <div class="card" style="border-left: 4px solid #e74c3c;">
+                        <h3 style="font-size: 0.8rem;"><i class="fas fa-arrow-down" style="margin-right: 6px;"></i>Lowest Price</h3>
+                        <div class="stat-value" id="stat-low-price" style="font-size: 1.5rem;">--</div>
+                        <p id="stat-low-market" style="font-size: 0.8rem; color: var(--text-slate); margin-top: 5px;">Market name</p>
+                    </div>
+                </div>
+
+                <div class="matrix-container" style="padding: 20px; background: var(--card-glass); display: flex; justify-content: center; height: 350px;">
+                    <canvas id="marketChart"></canvas>
+                </div>
+            </div>
+
+
+            <!-- Matrix Table -->
+            <div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <h3 style="margin:0; color:var(--text-white);"><i class="fas fa-th" style="color:var(--primary-color); margin-right:8px;"></i>Price Matrix <span style="font-size:0.8rem; font-weight:400; color:rgba(255,255,255,0.4);">(click any cell to edit)</span></h3>
+                <input type="text" id="matrix-search" placeholder="🔍 Search vegetable..."
+                    style="padding:8px 14px; border:1px solid var(--border-glass); border-radius:8px; background:var(--bg-slate); color:var(--text-white); font-family:inherit; width: 220px;"
+                    oninput="filterMatrix()">
+            </div>
+
+            <div class="matrix-container" style="margin-bottom: 30px;">
+                <table class="price-matrix" id="price-matrix">
+                    <thead id="matrix-head">
+                        <tr><th>Loading...</th></tr>
+                    </thead>
+                    <tbody id="matrix-body">
+                        <tr><td colspan="5">Loading market data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </main>
     </div>
 
-    <!-- Sell Modal -->
-    <div id="sellModal"
-        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
-        <div style="background:white; padding:30px; border-radius:10px; width:350px;">
-            <h3>Sell Your Produce</h3>
-            <input type="text" id="sell-crop" placeholder="Crop Name (e.g., Tomato)"
-                style="width:100%; margin:10px 0; padding:8px;">
-            <input type="number" id="sell-price" placeholder="Price ($)"
-                style="width:100%; margin:10px 0; padding:8px;">
-            <input type="text" id="sell-market" placeholder="Market Name"
-                style="width:100%; margin:10px 0; padding:8px;">
-            <button class="btn btn-primary" onclick="submitSell()">Post Listing</button>
-            <button class="btn btn-secondary" onclick="closeSellModal()" style="margin-top:10px;">Cancel</button>
+    <!-- Add/Update Price Modal -->
+    <div id="priceModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3><i class="fas fa-edit"></i> Add / Update Price</h3>
+            <p class="modal-subtitle">Set price for a single vegetable in a single market. Only the targeted cell will be updated.</p>
+
+            <div class="form-group">
+                <label for="modal-vegetable"><i class="fas fa-seedling" style="margin-right:4px;"></i>Vegetable / Crop</label>
+                <input list="vegetable-list" id="modal-vegetable" placeholder="e.g., Tomato" autocomplete="off">
+                <datalist id="vegetable-list"></datalist>
+                <div class="new-option-hint">Select from list or type a new name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="modal-market"><i class="fas fa-map-marker-alt" style="margin-right:4px;"></i>Market</label>
+                <input list="market-list" id="modal-market" placeholder="e.g., Azadpur (Delhi)" autocomplete="off">
+                <datalist id="market-list"></datalist>
+                <div class="new-option-hint">Select from list or type a new market name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="modal-price"><i class="fas fa-rupee-sign" style="margin-right:4px;"></i>Price (₹/kg)</label>
+                <input type="number" id="modal-price" placeholder="e.g., 25" min="0" step="0.5">
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closePriceModal()">Cancel</button>
+                <button class="btn btn-primary" id="btn-submit-price" onclick="submitPrice()">
+                    <i class="fas fa-check"></i> Save Price
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Google Translate -->
-    <div id="google_translate_element" style="position:fixed; bottom:20px; left:20px; z-index:1000;"></div>
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript"
-        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="i18n.js"></script>
     <script>
+        let matrixData = null;  // Cached matrix data
+
         function toggleSidebar() {
             const sidebar = document.querySelector('.sidebar');
             const mainContent = document.getElementById('main-content');
@@ -176,74 +515,484 @@
             mainContent.classList.toggle('full-width');
         }
 
-        async function loadPrices() {
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // =============================================
+        // DOWNLOAD
+        // =============================================
+        document.getElementById('download-link').addEventListener('click', async (e) => {
+            e.preventDefault();
             try {
-                const response = await fetch('http://localhost:5000/api/market_prices');
-                if (response.ok) {
-                    const data = await response.json();
-                    const tbody = document.getElementById('price-body');
-                    let rowsHtml = [];
-                    data.forEach(item => {
-                        const trendIcon = item.trend === 'up' ? '<i class="fas fa-arrow-up trend-up"></i>' : (item.trend === 'down' ? '<i class="fas fa-arrow-down trend-down"></i>' : '<span style="color:blue;">New</span>');
+                const res = await authFetch(`${API_BASE}/api/download_market_data`);
+                if (!res.ok) { showToast('Download failed', 'error'); return; }
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = "market_prices.csv";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+                showToast('Download started', 'success');
+            } catch (err) {
+                console.error(err);
+                showToast('Download error', 'error');
+            }
+        });
 
-                        const farmPrice = Number(item.price) || 0;
-                        const atl = Number(item.atlanta_retail) || 0;
-                        const chi = Number(item.chicago_retail) || 0;
-                        const la = Number(item.la_retail) || 0;
-                        const ny = Number(item.new_york_retail) || 0;
-
-                        // Simple color coding for spread
-                        const isHighSpread = item.average_spread && parseFloat(item.average_spread) > 200;
-                        const spreadClass = isHighSpread ? 'style="color:red; font-weight:bold;"' : '';
-
-                        rowsHtml.push(`<tr>
-                            <td>${item.crop}</td>
-                            <td>$${farmPrice.toFixed(2)}</td>
-                            <td>$${atl.toFixed(2)}</td>
-                            <td>$${chi.toFixed(2)}</td>
-                            <td>$${la.toFixed(2)}</td>
-                            <td>$${ny.toFixed(2)}</td>
-                            <td ${spreadClass}>${item.average_spread || '0%'}</td>
-                            <td>${trendIcon}</td>
-                        </tr>`);
-                    });
-                    tbody.innerHTML = rowsHtml.join('');
+        // =============================================
+        // MARKET MATRIX
+        // =============================================
+        async function loadMatrix() {
+            try {
+                const response = await authFetch(`${API_BASE}/api/market_matrix`);
+                if (response && response.ok) {
+                    matrixData = await response.json();
+                    renderMatrix(matrixData);
+                    loadSpreads(); // Refresh spreads
+                    localStorage.setItem('market_matrix_cache', JSON.stringify(matrixData));
                 } else {
-                    console.error("Failed to load prices: " + response.statusText);
+                    throw new Error('Failed to load');
                 }
             } catch (error) {
-                console.error("Fetch error:", error);
-                document.getElementById('price-body').innerHTML = '<tr><td colspan="8">Error loading market data. Please check if the backend is running.</td></tr>';
+                console.error('Matrix load error:', error);
+                const cached = localStorage.getItem('market_matrix_cache');
+                if (cached) {
+                    matrixData = JSON.parse(cached);
+                    renderMatrix(matrixData);
+                    showToast('Offline Mode: Showing cached data', 'info');
+                } else {
+                    document.getElementById('matrix-body').innerHTML = '<tr><td colspan="5">Error loading market data.</td></tr>';
+                }
             }
         }
 
-        function openSellModal() { document.getElementById('sellModal').style.display = 'flex'; }
-        function closeSellModal() { document.getElementById('sellModal').style.display = 'none'; }
+        async function loadSpreads() {
+            const tbody = document.getElementById('spread-body');
+            try {
+                const res = await authFetch(`${API_BASE}/api/market_matrix/spreads`);
+                if (res && res.ok) {
+                    const data = await res.json();
+                    if (data.length === 0) { 
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">No comparison data available yet.</td></tr>'; 
+                        return; 
+                    }
+                    tbody.innerHTML = data.map(s => {
+                        let spreadClass = 'spread-low';
+                        if (s.spread > 30) spreadClass = 'spread-high';
+                        else if (s.spread > 15) spreadClass = 'spread-mid';
+                        
+                        return `
+                            <tr>
+                                <td style="text-align:left; font-weight:600;">${s.vegetable}</td>
+                                <td>₹${s.min.toFixed(2)}</td>
+                                <td>₹${s.max.toFixed(2)}</td>
+                                <td style="color:var(--text-slate);">₹${s.avg.toFixed(2)}</td>
+                                <td><span class="spread-badge ${spreadClass}">${s.spread}%</span></td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            } catch (e) { console.error('Error loading spreads:', e); }
+        }
+        
 
-        async function submitSell() {
-            const crop = document.getElementById('sell-crop').value;
-            const price = document.getElementById('sell-price').value;
-            const market = document.getElementById('sell-market').value;
+        function renderMatrix(data) {
+            const thead = document.getElementById('matrix-head');
+            const tbody = document.getElementById('matrix-body');
+            const searchTerm = (document.getElementById('matrix-search').value || '').toLowerCase();
 
-            if (!crop || !price || !market) { alert("Fill all fields"); return; }
+            // Build header
+            let headerHtml = '<tr><th>Vegetable / Crop</th>';
+            data.markets.forEach(m => {
+                headerHtml += `<th>${escapeHtml(m)}</th>`;
+            });
+            headerHtml += '</tr>';
+            thead.innerHTML = headerHtml;
 
-            const res = await fetch('http://localhost:5000/api/sell_crop', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ crop, price, market })
+            // Build body
+            let bodyHtml = '';
+            const filteredVegs = data.vegetables.filter(v => v.toLowerCase().includes(searchTerm));
+
+            if (filteredVegs.length === 0) {
+                bodyHtml = `<tr><td colspan="${data.markets.length + 1}" style="text-align:center; padding:30px; color:rgba(255,255,255,0.4);">No vegetables match your search</td></tr>`;
+            } else {
+                filteredVegs.forEach(veg => {
+                    bodyHtml += '<tr>';
+                    bodyHtml += `<td><i class="fas fa-leaf" style="color: var(--primary-color); margin-right: 6px; font-size: 0.8rem;"></i>${escapeHtml(veg)}</td>`;
+                    data.markets.forEach(market => {
+                        const cellData = data.data[veg] && data.data[veg][market];
+                        if (cellData) {
+                            const price = cellData.price;
+                            bodyHtml += `<td class="price-cell" data-veg="${escapeAttr(veg)}" data-market="${escapeAttr(market)}" data-price="${price}" onclick="startEdit(this)" title="Click to edit">
+                                <span class="cell-price">₹${Number(price).toFixed(2)}</span>
+                            </td>`;
+                        } else {
+                            bodyHtml += `<td class="price-cell" data-veg="${escapeAttr(veg)}" data-market="${escapeAttr(market)}" data-price="" onclick="startEdit(this)" title="Click to add price">
+                                <span class="cell-empty">—</span>
+                            </td>`;
+                        }
+                    });
+                    bodyHtml += '</tr>';
+                });
+            }
+            tbody.innerHTML = bodyHtml;
+            renderChart(data);
+        }
+
+        let marketChartInstance = null;
+        
+        function renderChart(data) {
+            if(!data || !data.vegetables || data.vegetables.length === 0) return;
+            
+            // Populate select dropdown
+            const selectEl = document.getElementById('chart-veg-select');
+            const currentVal = selectEl.value;
+            selectEl.innerHTML = '';
+            
+            data.vegetables.sort().forEach(veg => {
+                const opt = document.createElement('option');
+                opt.value = veg;
+                opt.textContent = veg;
+                selectEl.appendChild(opt);
+            });
+            
+            // Retain selection or pick first
+            if (currentVal && data.vegetables.includes(currentVal)) {
+                selectEl.value = currentVal;
+            } else {
+                selectEl.value = data.vegetables[0];
+            }
+            
+            updateChart();
+        }
+
+        function updateChart() {
+            if (!matrixData) return;
+            const selectEl = document.getElementById('chart-veg-select');
+            const selectedVeg = selectEl.value;
+            if (!selectedVeg) return;
+            
+            const ctx = document.getElementById('marketChart').getContext('2d');
+            
+            // Get prices across markets for the selected veg
+            let labels = [];
+            let prices = [];
+            let validPrices = [];
+            let marketPriceMap = [];
+            
+            matrixData.markets.forEach(m => {
+                labels.push(m);
+                const priceVal = matrixData.data[selectedVeg] && matrixData.data[selectedVeg][m] ? parseFloat(matrixData.data[selectedVeg][m].price) : 0;
+                prices.push(priceVal);
+                if (priceVal > 0) {
+                    validPrices.push(priceVal);
+                    marketPriceMap.push({ market: m, price: priceVal });
+                }
             });
 
-            if (res.ok) {
-                alert("Listed Successfully!");
-                closeSellModal();
-                loadPrices(); // Refresh table
+            // Update Stats Cards
+            if (validPrices.length > 0) {
+                const avg = validPrices.reduce((a, b) => a + b, 0) / validPrices.length;
+                marketPriceMap.sort((a, b) => b.price - a.price);
+                const high = marketPriceMap[0];
+                const low = marketPriceMap[marketPriceMap.length - 1];
+
+                document.getElementById('stat-avg-price').textContent = `₹${avg.toFixed(2)}`;
+                document.getElementById('stat-high-price').textContent = `₹${high.price.toFixed(2)}`;
+                document.getElementById('stat-high-market').textContent = high.market;
+                document.getElementById('stat-low-price').textContent = `₹${low.price.toFixed(2)}`;
+                document.getElementById('stat-low-market').textContent = low.market;
             } else {
-                alert("Failed to list.");
+                document.getElementById('stat-avg-price').textContent = '--';
+                document.getElementById('stat-high-price').textContent = '--';
+                document.getElementById('stat-high-market').textContent = 'No data';
+                document.getElementById('stat-low-price').textContent = '--';
+                document.getElementById('stat-low-market').textContent = 'No data';
+            }
+            
+            if (marketChartInstance) { marketChartInstance.destroy(); }
+            
+            Chart.defaults.color = 'rgba(255,255,255,0.7)';
+            marketChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `Current Price (₹/kg)`,
+                        data: prices,
+                        backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                        borderColor: '#3498db',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#3498db',
+                        pointHoverRadius: 6,
+                        pointRadius: 4,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#fff' } },
+                        title: {
+                            display: true,
+                            text: `${selectedVeg} Prices Across Markets`,
+                            color: '#fff',
+                            font: { size: 16 }
+                        }
+                    }
+                }
+            });
+        }
+
+
+
+        function filterMatrix() {
+            if (matrixData) renderMatrix(matrixData);
+        }
+
+        // =============================================
+        // INLINE CELL EDITING
+        // =============================================
+        function startEdit(td) {
+            if (td.classList.contains('cell-editing')) return;
+
+            const veg = td.getAttribute('data-veg');
+            const market = td.getAttribute('data-market');
+            const currentPrice = td.getAttribute('data-price');
+
+            td.classList.add('cell-editing');
+            td.innerHTML = `<input type="number" step="0.5" min="0" value="${currentPrice}" 
+                             onblur="finishEdit(this, '${escapeAttr(veg)}', '${escapeAttr(market)}')" 
+                             onkeydown="handleEditKey(event, this, '${escapeAttr(veg)}', '${escapeAttr(market)}')"
+                             autofocus>`;
+            const input = td.querySelector('input');
+            input.focus();
+            input.select();
+        }
+
+        function handleEditKey(event, input, veg, market) {
+            if (event.key === 'Enter') {
+                input.blur();
+            } else if (event.key === 'Escape') {
+                // Cancel edit
+                const td = input.closest('td');
+                td.classList.remove('cell-editing');
+                const oldPrice = td.getAttribute('data-price');
+                if (oldPrice) {
+                    td.innerHTML = `<span class="cell-price">₹${Number(oldPrice).toFixed(2)}</span>`;
+                } else {
+                    td.innerHTML = `<span class="cell-empty">—</span>`;
+                }
             }
         }
 
-        window.onload = loadPrices;
+        async function finishEdit(input, veg, market) {
+            const td = input.closest('td');
+            const newPrice = input.value.trim();
+            const oldPrice = td.getAttribute('data-price');
+
+            // If empty or unchanged, revert
+            if (!newPrice || newPrice === oldPrice) {
+                td.classList.remove('cell-editing');
+                if (oldPrice) {
+                    td.innerHTML = `<span class="cell-price">₹${Number(oldPrice).toFixed(2)}</span>`;
+                } else {
+                    td.innerHTML = `<span class="cell-empty">—</span>`;
+                }
+                return;
+            }
+
+            // Show saving state
+            td.innerHTML = '<span style="color:var(--primary-color);"><i class="fas fa-spinner fa-spin"></i></span>';
+
+            try {
+                const res = await authFetch(`${API_BASE}/api/market_matrix/upsert`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ vegetable: veg, market: market, price: parseFloat(newPrice) })
+                });
+
+                if (res.ok) {
+                    const result = await res.json();
+                    td.classList.remove('cell-editing');
+                    td.setAttribute('data-price', result.price);
+                    td.innerHTML = `<span class="cell-price" style="color: #2ecc71;">₹${Number(result.price).toFixed(2)}</span>`;
+                    
+                    // Flash green briefly
+                    td.style.background = 'rgba(46,204,113,0.2)';
+                    setTimeout(() => { td.style.background = ''; }, 1000);
+
+                    showToast(`Price updated: ${veg} → ₹${result.price}`, 'success');
+
+                    // Update cached matrixData
+                    if (matrixData) {
+                        if (!matrixData.data[veg]) matrixData.data[veg] = {};
+                        matrixData.data[veg][market] = { price: result.price, updated_at: new Date().toISOString() };
+                    }
+                } else {
+                    const err = await res.json();
+                    showToast(err.error || 'Update failed', 'error');
+                    revertCell(td, oldPrice);
+                }
+            } catch (e) {
+                console.error('Edit error:', e);
+                showToast('Server error', 'error');
+                revertCell(td, oldPrice);
+            }
+        }
+
+        function revertCell(td, oldPrice) {
+            td.classList.remove('cell-editing');
+            if (oldPrice) {
+                td.innerHTML = `<span class="cell-price">₹${Number(oldPrice).toFixed(2)}</span>`;
+            } else {
+                td.innerHTML = `<span class="cell-empty">—</span>`;
+            }
+        }
+
+        // =============================================
+        // MODAL: ADD / UPDATE PRICE
+        // =============================================
+        async function openPriceModal() {
+            document.getElementById('priceModal').style.display = 'flex';
+
+            // Populate datalists
+            try {
+                const [vegRes, mktRes] = await Promise.all([
+                    authFetch(`${API_BASE}/api/market_matrix/vegetables`),
+                    authFetch(`${API_BASE}/api/market_matrix/markets`)
+                ]);
+
+                if (vegRes.ok) {
+                    const vegs = await vegRes.json();
+                    const dl = document.getElementById('vegetable-list');
+                    dl.innerHTML = vegs.map(v => `<option value="${escapeAttr(v)}">`).join('');
+                }
+                if (mktRes.ok) {
+                    const mkts = await mktRes.json();
+                    const dl = document.getElementById('market-list');
+                    dl.innerHTML = mkts.map(m => `<option value="${escapeAttr(m)}">`).join('');
+                }
+            } catch (e) {
+                console.error('Error loading dropdown data:', e);
+            }
+
+            document.getElementById('modal-vegetable').value = '';
+            document.getElementById('modal-market').value = '';
+            document.getElementById('modal-price').value = '';
+            document.getElementById('modal-vegetable').focus();
+        }
+
+        function closePriceModal() {
+            document.getElementById('priceModal').style.display = 'none';
+        }
+
+        async function submitPrice() {
+            const vegetable = document.getElementById('modal-vegetable').value.trim();
+            const market = document.getElementById('modal-market').value.trim();
+            const price = document.getElementById('modal-price').value.trim();
+
+            if (!vegetable) { showToast('Please enter a vegetable name', 'error'); return; }
+            if (!market) { showToast('Please enter a market name', 'error'); return; }
+            if (!price || isNaN(price) || parseFloat(price) < 0) { showToast('Please enter a valid price', 'error'); return; }
+
+            const btn = document.getElementById('btn-submit-price');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.disabled = true;
+
+            try {
+                const res = await authFetch(`${API_BASE}/api/market_matrix/upsert`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ vegetable, market, price: parseFloat(price) })
+                });
+
+                if (res.ok) {
+                    const result = await res.json();
+                    const actionLabels = {
+                        'updated': 'Price updated',
+                        'new_vegetable': 'New vegetable added',
+                        'new_market': 'New market column added',
+                        'new_both': 'New vegetable & market added'
+                    };
+                    showToast(`${actionLabels[result.action] || 'Saved'}: ${result.vegetable} at ${result.market} → ₹${result.price}`, 'success');
+                    closePriceModal();
+                    loadMatrix();  // Reload the full matrix
+                } else {
+                    const err = await res.json();
+                    showToast(err.error || 'Failed to save', 'error');
+                }
+            } catch (e) {
+                console.error('Submit error:', e);
+                showToast('Server error', 'error');
+            } finally {
+                btn.innerHTML = '<i class="fas fa-check"></i> Save Price';
+                btn.disabled = false;
+            }
+        }
+
+        // Close modal on overlay click
+        document.getElementById('priceModal').addEventListener('click', function(e) {
+            if (e.target === this) closePriceModal();
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closePriceModal();
+        });
+
+
+
+        // =============================================
+        // UTILITY
+        // =============================================
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function escapeAttr(str) {
+            return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+
+        // =============================================
+        // INIT
+        // =============================================
+        window.onload = () => { 
+            loadMatrix(); 
+        };
     </script>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="market.html" class="active"><i class="fas fa-store"></i><span>Market</span></a>
+        <a href="chat.html"><i class="fas fa-comments"></i><span>Chat</span></a>
+        <a href="weather.html"><i class="fas fa-cloud-sun"></i><span>Weather</span></a>
+        <a href="disease.html"><i class="fas fa-leaf"></i><span>Detect</span></a>
+    </nav>
+    <script src="google-translate.js"></script>
 </body>
 
 </html>

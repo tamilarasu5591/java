@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather - AgriVistara</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard-layout.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .weather-card {
@@ -35,16 +36,19 @@
         }
 
         .forecast-item {
-            background: white;
+            background: var(--card-glass);
             padding: 15px;
             border-radius: 10px;
             text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(10px);
+            color: var(--text-white);
         }
 
         .forecast-item i {
             font-size: 2rem;
-            color: #0083b0;
+            color: #00b4db;
             margin-bottom: 10px;
         }
     </style>
@@ -56,38 +60,38 @@
         <aside class="sidebar">
             <div class="logo">AgriVistara</div>
             <ul class="sidebar-menu">
-                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="disease.html"><i class="fas fa-leaf"></i> Disease Detection</a></li>
-                <li><a href="#" class="active"><i class="fas fa-cloud-sun"></i> Weather</a></li>
-                <li><a href="market.html"><i class="fas fa-store"></i> Market</a></li>
-                <li><a href="chat.html"><i class="fas fa-comments"></i> AI Chat</a></li>
-                <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a href="dashboard.html" data-i18n="nav_dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="soil.html" data-i18n="nav_soil"><i class="fas fa-flask"></i> Soil Health</a></li>
+                <li><a href="disease.html" data-i18n="nav_disease"><i class="fas fa-leaf"></i> Disease Detection</a></li>
+                <li><a href="#" class="active" data-i18n="nav_weather"><i class="fas fa-cloud-sun"></i> Weather</a></li>
+                <li><a href="market.html" data-i18n="nav_market"><i class="fas fa-store"></i> Market</a></li>
+                <li><a href="chat.html" data-i18n="nav_chat"><i class="fas fa-comments"></i> AI Chat</a></li>
+                <li><a href="community.html"><i class="fas fa-users"></i> Community</a></li>
+                <li><a href="schemes.html"><i class="fas fa-hand-holding-usd"></i> Schemes</a></li>
+<li><a href="index.html" data-i18n="nav_logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content" id="main-content">
-            <div class="top-bar">
+            <div class="top-bar" style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-slate); padding: 10px 20px; border-radius: 10px; border: 1px solid var(--border-glass); margin-bottom: 20px;">
                 <div style="display: flex; align-items: center; gap: 20px;">
                     <div class="hamburger-menu" onclick="toggleSidebar()">
                         <i class="fas fa-bars"></i>
                     </div>
-                    <h2>Weather Monitoring</h2>
+                    <h2 data-translate>Weather Monitoring</h2>
                 </div>
+                <div id="google_translate_element"></div>
             </div>
             <div id="weather-display">Loading...</div>
         </main>
     </div>
-    <!-- Google Translate -->
-    <div id="google_translate_element" style="position:fixed; bottom:20px; left:20px; z-index:1000;"></div>
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript"
-        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
+
+
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="i18n.js"></script>
     <script>
         function toggleSidebar() {
             const sidebar = document.querySelector('.sidebar');
@@ -96,31 +100,72 @@
             mainContent.classList.toggle('full-width');
         }
 
-        fetch('http://localhost:5000/api/weather')
-            .then(res => res.json())
-            .then(data => {
-                let html = `
-                <div class="weather-card">
-                    <i class="fas fa-cloud-sun"></i>
-                    <div class="temp">${data.temp}</div>
-                    <p>${data.condition} | Humidity: ${data.humidity}</p>
-                </div>
-                <h3>3-Day Forecast</h3>
-                <div class="forecast-grid">
-            `;
-                data.forecast.forEach(day => {
-                    html += `
-                    <div class="forecast-item">
-                        <p><strong>${day.day}</strong></p>
-                        <i class="fas ${day.icon}"></i>
-                        <p>${day.temp}</p>
-                    </div>
-                `;
+        function renderWeather(data) {
+            // Render alerts first if any
+            let alertsHtml = '';
+            if (data.alerts && data.alerts.length > 0) {
+                alertsHtml = `<div style="margin-bottom:20px;">`;
+                data.alerts.forEach(alert => {
+                    alertsHtml += `<div style="background:rgba(249,168,37,0.15);border-left:4px solid #f9a825;padding:12px 16px;border-radius:8px;margin-bottom:8px;font-size:0.95rem;color:#ffcc80;">${alert}</div>`;
                 });
-                html += `</div>`;
-                document.getElementById('weather-display').innerHTML = html;
+                alertsHtml += `</div>`;
+            }
+
+            let html = alertsHtml + `
+            <div class="weather-card">
+                <i class="fas fa-cloud-sun"></i>
+                <div class="temp">${data.temp}</div>
+                <p>${data.condition} | Humidity: ${data.humidity}${data.wind_kph ? ' | Wind: ' + data.wind_kph + ' km/h' : ''}</p>
+            </div>
+            <h3>3-Day Forecast</h3>
+            <div class="forecast-grid">
+        `;
+            data.forecast.forEach(day => {
+                html += `
+                <div class="forecast-item">
+                    <p><strong>${day.day}</strong></p>
+                    <i class="fas ${day.icon}"></i>
+                    <p>${day.temp}</p>
+                </div>
+            `;
+            });
+            html += `</div>`;
+            document.getElementById('weather-display').innerHTML = html;
+        }
+
+        authFetch(`${API_BASE}/api/weather`)
+            .then(res => res ? res.json() : null)
+            .then(data => {
+                if (data) {
+                    localStorage.setItem('weather_cache', JSON.stringify(data));
+                    renderWeather(data);
+                }
+            })
+            .catch(err => {
+                const cachedData = localStorage.getItem('weather_cache');
+                if (cachedData) {
+                    renderWeather(JSON.parse(cachedData));
+                    // Show a simple offline notice
+                    const notice = document.createElement('div');
+                    notice.style.cssText = "background:var(--bg-slate);color:var(--text-slate);padding:8px;text-align:center;margin-bottom:10px;border-radius:5px;border:1px solid var(--border-glass);";
+                    notice.innerText = "Offline Mode: Showing cached weather data";
+                    const display = document.getElementById('weather-display');
+                    display.insertBefore(notice, display.firstChild);
+                } else {
+                    document.getElementById('weather-display').innerHTML = '<p>Error loading weather data. You are offline and no cached data is available.</p>';
+                }
             });
     </script>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="market.html"><i class="fas fa-store"></i><span>Market</span></a>
+        <a href="chat.html"><i class="fas fa-comments"></i><span>Chat</span></a>
+        <a href="weather.html" class="active"><i class="fas fa-cloud-sun"></i><span>Weather</span></a>
+        <a href="disease.html"><i class="fas fa-leaf"></i><span>Detect</span></a>
+    </nav>
+    <script src="google-translate.js"></script>
 </body>
 
 </html>

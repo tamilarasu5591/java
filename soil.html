@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Health - AgriVistara</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard-layout.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .soil-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .soil-form {
+            background: var(--card-glass);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-slate);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border-glass);
+            background: rgba(15, 23, 42, 0.7);
+            color: var(--text-white);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.3);
+            outline: none;
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        #recommendation-result {
+            display: none;
+            animation: slideIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .badge {
+            transition: transform 0.2s ease;
+            display: inline-block;
+        }
+
+        .badge:hover {
+            transform: translateY(-2px);
+            background: var(--primary-color) !important;
+            color: white !important;
+        }
+
+        @media (max-width: 768px) {
+            .soil-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">AgriVistara</div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html" data-i18n="nav_dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#" class="active" data-i18n="nav_soil"><i class="fas fa-flask"></i> Soil Health</a></li>
+                <li><a href="disease.html" data-i18n="nav_disease"><i class="fas fa-leaf"></i> Disease Detection</a></li>
+                <li><a href="weather.html" data-i18n="nav_weather"><i class="fas fa-cloud-sun"></i> Weather</a></li>
+                <li><a href="market.html" data-i18n="nav_market"><i class="fas fa-store"></i> Market</a></li>
+                <li><a href="chat.html" data-i18n="nav_chat"><i class="fas fa-comments"></i> AI Chat</a></li>
+                <li><a href="community.html" data-i18n="nav_community"><i class="fas fa-users"></i> Community</a></li>
+                <li><a href="schemes.html" data-i18n="nav_schemes"><i class="fas fa-hand-holding-usd"></i> Schemes</a></li>
+<li><a href="index.html" data-i18n="nav_logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="main-content">
+            <div class="top-bar"
+                style="background: var(--bg-slate); padding: 15px 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); margin-bottom: 30px; display: flex; align-items: center; gap: 20px; border-radius: 10px; border: 1px solid var(--border-glass); justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div class="hamburger-menu" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                    <h2 style="margin: 0; font-size: 1.5rem; color: var(--text-white);" data-translate>Soil Health Analysis</h2>
+                </div>
+                <div id="google_translate_element"></div>
+            </div>
+
+            <div class="soil-container">
+                <div class="soil-form">
+                    <h3 style="margin-bottom: 25px; color: var(--text-white); font-weight: 700;">Enter Test Results</h3>
+                    <div class="input-group">
+                        <label>Nitrogen (N)</label>
+                        <input type="number" id="n-val" placeholder="mg/kg (e.g. 40)">
+                    </div>
+                    <div class="input-group">
+                        <label>Phosphorus (P)</label>
+                        <input type="number" id="p-val" placeholder="mg/kg (e.g. 50)">
+                    </div>
+                    <div class="input-group">
+                        <label>Potassium (K)</label>
+                        <input type="number" id="k-val" placeholder="mg/kg (e.g. 45)">
+                    </div>
+                    <div class="input-group">
+                        <label>pH Level</label>
+                        <input type="number" step="0.1" id="ph-val" placeholder="0 - 14 (e.g. 6.5)">
+                    </div>
+                    <div class="input-group">
+                        <label>Land Size (Acres)</label>
+                        <input type="number" step="0.5" id="acres-val" value="1.0" min="0.5" placeholder="e.g. 2.5">
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; padding: 15px; font-weight: 600; font-size: 1rem; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);" onclick="getRecommendation()">Analyze & Recommend</button>
+                </div>
+
+                <div id="recommendation-result">
+                    <div class="card" style="border-left: 6px solid var(--primary-color); height: 100%; display: flex; flex-direction: column;">
+                        <span style="font-size: 0.75rem; color: var(--text-slate); text-transform: uppercase; letter-spacing: 2px;">Optimal Crop</span>
+                        <h2 id="rec-crop" style="color: var(--primary-color); margin: 10px 0; font-size: 2.2rem;">---</h2>
+                        <p style="color: var(--text-slate); margin-bottom: 20px;">Match Probability: <span id="rec-conf" style="font-weight: 700; color: var(--text-white); font-size: 1.2rem;">--%</span></p>
+                        
+                        <div style="background: rgba(46, 204, 113, 0.07); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(46, 204, 113, 0.2);">
+                            <h4 style="color: var(--primary-color); margin-bottom: 8px;"><i class="fas fa-microchip" style="margin-right:8px;"></i>AI Advisory</h4>
+                            <p id="rec-tip" style="font-size: 0.95rem; line-height: 1.6; color: var(--text-white); opacity: 0.9;"></p>
+                        </div>
+                        
+                        <div id="rec-alternatives-container">
+                            <h4 style="margin-bottom:12px; font-size: 0.9rem; color: var(--text-slate);">Other suitable options:</h4>
+                            <div id="rec-alternatives" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                                <!-- Alternatives will be added here -->
+                            </div>
+                        </div>
+
+                        <!-- Fertilizer Prescription Widget -->
+                        <div id="fertilizer-prescription" style="display:none; margin-top: 25px; padding-top: 20px; border-top: 1px dashed var(--border-glass);">
+                            <h4 style="color: var(--text-white); margin-bottom: 15px;"><i class="fas fa-prescription-bottle" style="color: #f1c40f; margin-right:8px;"></i>STCR Fertilizer Prescription</h4>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;">
+                                <div style="background: rgba(41, 128, 185, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(41, 128, 185, 0.3); text-align: center;">
+                                    <div style="font-size: 0.7rem; color: var(--text-slate); text-transform: uppercase;">Urea (45kg)</div>
+                                    <div id="fert-urea" style="font-size: 1.4rem; font-weight: 700; color: #3498db; margin: 5px 0;">--</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-slate);">Bags</div>
+                                </div>
+                                <div style="background: rgba(230, 126, 34, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(230, 126, 34, 0.3); text-align: center;">
+                                    <div style="font-size: 0.7rem; color: var(--text-slate); text-transform: uppercase;">DAP (50kg)</div>
+                                    <div id="fert-dap" style="font-size: 1.4rem; font-weight: 700; color: #e67e22; margin: 5px 0;">--</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-slate);">Bags</div>
+                                </div>
+                                <div style="background: rgba(155, 89, 182, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(155, 89, 182, 0.3); text-align: center;">
+                                    <div style="font-size: 0.7rem; color: var(--text-slate); text-transform: uppercase;">MOP (50kg)</div>
+                                    <div id="fert-mop" style="font-size: 1.4rem; font-weight: 700; color: #9b59b6; margin: 5px 0;">--</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-slate);">Bags</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-midnight); padding: 10px 15px; border-radius: 8px; font-size: 0.85rem;">
+                                <span><span id="fert-acres" style="font-weight:bold;">1</span> Acres Required Dosage</span>
+                                <a href="market.html" class="btn btn-primary" style="padding: 6px 15px; font-size: 0.8rem; background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color);">Buy Now</a>
+                            </div>
+                        </div>
+
+                        <!-- Dataset Insights Widget -->
+                        <div id="dataset-insights-widget" style="display:none; margin-top: 20px; padding: 15px; background: rgba(52,152,219,0.07); border-radius: 12px; border: 1px solid rgba(52,152,219,0.2);">
+                            <h4 style="color: #3498db; margin-bottom: 10px; font-size: 0.9rem;"><i class="fas fa-database" style="margin-right:6px;"></i>Dataset-Backed Insights <span style="font-size:0.7rem; color:var(--text-slate);">(from agricultural_datasets.xlsx)</span></h4>
+                            <div id="dataset-insights-list" style="font-size: 0.85rem; color: var(--text-white); line-height: 1.8;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="i18n.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('full-width');
+        }
+
+        async function getRecommendation() {
+            const n = parseFloat(document.getElementById('n-val').value);
+            const p = parseFloat(document.getElementById('p-val').value);
+            const k = parseFloat(document.getElementById('k-val').value);
+            const ph = parseFloat(document.getElementById('ph-val').value);
+            const acres = parseFloat(document.getElementById('acres-val').value) || 1.0;
+
+            if (isNaN(n) || isNaN(p) || isNaN(k) || isNaN(ph)) {
+                alert("Please enter all NPK/pH values");
+                return;
+            }
+
+            try {
+                const res = await authFetch(`${API_BASE}/api/recommend`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ N: n, P: p, K: k, ph: ph, acres: acres })
+                });
+
+                if (res && res.ok) {
+                    const data = await res.json();
+                    document.getElementById('rec-crop').textContent = `Recommended: ${data.recommended_crop}`;
+                    document.getElementById('rec-conf').textContent = data.confidence;
+                    document.getElementById('rec-tip').textContent = data.tip;
+                    
+                    const altDiv = document.getElementById('rec-alternatives');
+                    if (data.alternatives && data.alternatives.length > 0) {
+                        altDiv.innerHTML = '<h4 style="margin-bottom:10px;">Alternatives:</h4>' + 
+                            data.alternatives.map(a => `<span class="badge" style="margin-right:5px; background:var(--bg-slate); border:1px solid var(--border-glass); padding:5px 10px; border-radius:15px; font-size:0.8rem;">${a.name} (${a.confidence}%)</span>`).join('');
+                    } else {
+                        altDiv.innerHTML = '';
+                    }
+
+                    if (data.fertilizer_plan) {
+                        document.getElementById('fert-urea').textContent = data.fertilizer_plan.urea_bags;
+                        document.getElementById('fert-dap').textContent = data.fertilizer_plan.dap_bags;
+                        document.getElementById('fert-mop').textContent = data.fertilizer_plan.mop_bags;
+                        document.getElementById('fert-acres').textContent = data.fertilizer_plan.land_acres;
+                        document.getElementById('fertilizer-prescription').style.display = 'block';
+                    }
+
+                    // Display dataset insights
+                    if (data.dataset_insights && data.dataset_insights.length > 0) {
+                        let insightHtml = '';
+                        data.dataset_insights.forEach((ins, i) => {
+                            insightHtml += `<div style="padding:6px 0; ${i > 0 ? 'border-top:1px solid rgba(255,255,255,0.06);' : ''}">
+                                <span style="color:#3498db;">•</span> <strong>${ins.fertilizer}</strong> — ${ins.amount} at <em>${ins.stage}</em>
+                            </div>`;
+                        });
+                        document.getElementById('dataset-insights-list').innerHTML = insightHtml;
+                        document.getElementById('dataset-insights-widget').style.display = 'block';
+                    }
+
+                    document.getElementById('recommendation-result').style.display = 'block';
+                    document.getElementById('recommendation-result').scrollIntoView({ behavior: 'smooth' });
+                }
+            } catch (e) {
+                alert("Error getting recommendation");
+            }
+        }
+</script>
+    <script src="google-translate.js"></script>
+</body>
+
+</html>

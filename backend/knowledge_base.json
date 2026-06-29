@@ -1,0 +1,417 @@
+{
+    "knowledge_base_version": "1.1",
+    "last_updated": "2026-04-09",
+    "categories": {
+        "crops": [
+            {
+                "id": "crop_rice",
+                "name": "Rice (Paddy)",
+                "local_names": { "ta": "நெல்", "hi": "धान" },
+                "type": "Cereal",
+                "seasons": ["Kharif (Jun-Sep)", "Rabi (Nov-Mar)", "Samba (Aug-Jan)"],
+                "soil": "Clayey or loamy, pH 5.5-7.0",
+                "npk": "N:60-120, P:30-60, K:30-60 kg/ha",
+                "water": "1200-1400 mm (standing water 5 cm)",
+                "varieties": ["IR-64", "ADT-36", "CO-51", "BPT-5204 (Sona Masuri)"],
+                "yield_t_ha": "5-6",
+                "sowing_tip": "Sow seeds in nursery, transplant at 3-4 leaf stage. Spacing: 20x15 cm.",
+                "pest_alert": "Watch for stem borer, brown plant hopper, and leaf folder.",
+                "source": "TNAU Agri Portal"
+            },
+            {
+                "id": "crop_tomato",
+                "name": "Tomato",
+                "local_names": { "ta": "தக்காளி", "hi": "टमाटर" },
+                "type": "Vegetable / Fruit",
+                "seasons": ["Sep-Jan", "Feb-May"],
+                "soil": "Well-drained loamy, pH 5.5-7.0",
+                "npk": "N:60-100, P:50-80, K:60-100 kg/ha",
+                "water": "600-800 mm (drip irrigation preferred)",
+                "varieties": ["PKM-1", "Pusa Ruby", "CO-3", "Arka Vikas"],
+                "yield_t_ha": "25-40",
+                "sowing_tip": "Transplant at 25-30 days. Stake plants at 30 cm height. Mulch to reduce splash diseases.",
+                "pest_alert": "Watch for whitefly (transmits TYLCV), early blight, and fruit borer.",
+                "source": "ICAR"
+            },
+            {
+                "id": "crop_wheat",
+                "name": "Wheat",
+                "local_names": { "ta": "கோதுமை", "hi": "गेहूं" },
+                "type": "Cereal",
+                "seasons": ["Rabi (Oct-Nov sowing)"],
+                "soil": "Well-drained loamy, pH 6.0-7.5",
+                "npk": "N:60-120, P:25-60, K:20-50 kg/ha",
+                "water": "400-500 mm (6 irrigations)",
+                "varieties": ["HD-2967", "HD-3086", "GW-322", "Raj-4120"],
+                "yield_t_ha": "4-6",
+                "sowing_tip": "Sow at 20-22°C. Seed rate: 100 kg/ha. Irrigate at crown root initiation (21 days).",
+                "pest_alert": "Watch for yellow rust, loose smut, and aphids in cool humid conditions.",
+                "source": "ICAR-IARI"
+            },
+            {
+                "id": "crop_groundnut",
+                "name": "Groundnut (Peanut)",
+                "local_names": { "ta": "நிலக்கடலை", "hi": "मूंगफली" },
+                "type": "Oilseed / Legume",
+                "seasons": ["Kharif (Jun-Jul)", "Rabi (Oct-Nov)"],
+                "soil": "Sandy loam, pH 5.5-7.0",
+                "npk": "N:10-40, P:40-70, K:30-60 kg/ha",
+                "water": "400-600 mm",
+                "varieties": ["TMV-7", "K-6", "VRI-2", "GJG-31"],
+                "yield_t_ha": "2-4",
+                "sowing_tip": "Inoculate seeds with Rhizobium. Spacing: 30x10 cm. Keep field weed-free for first 45 days.",
+                "pest_alert": "Watch for leaf spot, tikka disease, and white grub.",
+                "source": "TNAU"
+            },
+            {
+                "id": "crop_banana",
+                "name": "Banana",
+                "local_names": { "ta": "வாழை", "hi": "केला" },
+                "type": "Fruit",
+                "seasons": ["Year-round (planted Jun-Jul or Jan-Feb)"],
+                "soil": "Deep loamy, pH 6.0-7.5",
+                "npk": "N:100-150, P:30-60, K:100-150 kg/ha/year",
+                "water": "1200-1400 mm (drip highly recommended)",
+                "varieties": ["Poovan", "Grand Naine", "Nendran", "Robusta"],
+                "yield_t_ha": "40-80",
+                "sowing_tip": "Plant suckers at 1.8x1.8 m spacing. Apply 200 g MOP per plant biannually.",
+                "pest_alert": "Watch for Panama wilt (Fusarium), banana bunchy top virus, and weevil borer.",
+                "source": "NHB India"
+            },
+            {
+                "id": "crop_cotton",
+                "name": "Cotton",
+                "local_names": { "ta": "பருத்தி", "hi": "कपास" },
+                "type": "Fiber",
+                "seasons": ["Kharif (May-Jul)", "Summer (Feb-Mar)"],
+                "soil": "Black cotton soil (Regur), deep clayey, pH 6.0-8.0",
+                "npk": "N:80-120, P:40-60, K:40-60 kg/ha",
+                "water": "700-1200 mm",
+                "varieties": ["MCU-5", "LRA-5166", "Surabhi", "Bt Cotton hybrids"],
+                "yield_t_ha": "1.5-2.5",
+                "sowing_tip": "Spacing 90x45cm or 120x60cm depending on variety. Apply nitrogen in splits.",
+                "pest_alert": "Watch for Bollworms (Pink, Spotted), Whitefly, Thrips, Cotton Leaf Curl Virus.",
+                "source": "CICR"
+            },
+            {
+                "id": "crop_maize",
+                "name": "Maize (Corn)",
+                "local_names": { "ta": "மக்காச்சோளம்", "hi": "मक्का" },
+                "type": "Cereal",
+                "seasons": ["Kharif (Jun-Jul)", "Rabi (Oct-Nov)", "Spring (Feb-Mar)"],
+                "soil": "Well-drained fertile loamy, pH 5.5-7.5",
+                "npk": "N:120-150, P:60-80, K:40-60 kg/ha",
+                "water": "500-800 mm",
+                "varieties": ["CO-6", "HQPM-1", "Ganga Safed-2"],
+                "yield_t_ha": "5-8",
+                "sowing_tip": "Sow on ridges or raised beds. Spacing 60x20cm. Maintain proper soil moisture during tasseling and silking.",
+                "pest_alert": "Fall Armyworm (major threat), Stem Borer, Shoot Fly.",
+                "source": "IIMR"
+            },
+            {
+                "id": "crop_onion",
+                "name": "Onion",
+                "local_names": { "ta": "வெங்காயம்", "hi": "प्याज" },
+                "type": "Vegetable",
+                "seasons": ["Kharif (Jun-Jul)", "Late Kharif (Aug-Sep)", "Rabi (Oct-Nov)"],
+                "soil": "Sandy loam to clay loam, well-drained, pH 6.0-7.0",
+                "npk": "N:100-150, P:50-80, K:50-80 kg/ha",
+                "water": "350-550 mm",
+                "varieties": ["Agrifound Light Red", "N-53", "Bhima Super", "CO-4"],
+                "yield_t_ha": "25-30",
+                "sowing_tip": "Transplant 45-day nursery seedlings. Stop irrigation 2-3 weeks before harvest.",
+                "pest_alert": "Thrips, Purple Blotch, Basal Rot.",
+                "source": "DOGR"
+            },
+            {
+                "id": "crop_sugarcane",
+                "name": "Sugarcane",
+                "local_names": { "ta": "கரும்பு", "hi": "गन्ना" },
+                "type": "Cash Crop",
+                "seasons": ["Eksali (Jan-Feb)", "Adsali (Jul-Aug)"],
+                "soil": "Deep rich loamy, clay loam, pH 6.5-7.5",
+                "npk": "N:250-300, P:100-120, K:100-120 kg/ha",
+                "water": "1500-2500 mm (drip recommended for high yield)",
+                "varieties": ["Co-86032", "Co-0238", "Co-0118", "PI-311"],
+                "yield_t_ha": "80-120",
+                "sowing_tip": "Use two-budded setts. Plant in trenches at 90-120cm spacing. Earth up at 90-120 days.",
+                "pest_alert": "Early shoot borer, Internode borer, Red Rot.",
+                "source": "SBI Coimbatore"
+            },
+            {
+                "id": "crop_chilli",
+                "name": "Chilli",
+                "local_names": { "ta": "மிளகாய்", "hi": "मिर्च" },
+                "type": "Spice / Vegetable",
+                "seasons": ["Kharif (Jun-Jul)", "Rabi (Sep-Oct)"],
+                "soil": "Well-drained loam or clay-loam, pH 6.0-7.0",
+                "npk": "N:120-150, P:60-80, K:60-80 kg/ha",
+                "water": "500-600 mm",
+                "varieties": ["K-1", "Pusa Jwala", "Byadagi", "Guntur Sannam"],
+                "yield_t_ha": "15-20 (Green), 2-3 (Dry)",
+                "sowing_tip": "Transplant 35-40 day seedlings. Spacing 60x45cm. Avoid water stagnation.",
+                "pest_alert": "Thrips, Mites, Fruit Borer, Leaf Curl Virus.",
+                "source": "IIHR"
+            },
+            {
+                "id": "crop_brinjal",
+                "name": "Brinjal (Eggplant)",
+                "local_names": { "ta": "கத்தரிக்காய்", "hi": "बैंगन" },
+                "type": "Vegetable",
+                "seasons": ["Kharif (Jun-Jul)", "Rabi (Oct-Nov)", "Summer (Feb-Mar)"],
+                "soil": "Well-drained sandy loam or clay loam, pH 5.5-6.8",
+                "npk": "N:100-120, P:50-60, K:50-60 kg/ha",
+                "water": "500-700 mm",
+                "varieties": ["Pusa Purple Long", "Arka Navneet", "CO-2"],
+                "yield_t_ha": "30-50",
+                "sowing_tip": "Transplant 4-5 week old seedlings at 60x60cm spacing.",
+                "pest_alert": "Shoot and Fruit Borer (major pest), Epilachna beetle, Phomopsis blight.",
+                "source": "IIVR"
+            },
+            {
+                "id": "crop_okra",
+                "name": "Okra (Bhindi)",
+                "local_names": { "ta": "வெண்டைக்காய்", "hi": "भिंडी" },
+                "type": "Vegetable",
+                "seasons": ["Kharif (Jun-Jul)", "Summer (Feb-Mar)"],
+                "soil": "Sandy loam to clay loam, pH 6.0-6.8",
+                "npk": "N:100-150, P:50-60, K:50-60 kg/ha",
+                "water": "400-500 mm",
+                "varieties": ["Pusa Makhmali", "Arka Anamika", "Parbhani Kranti"],
+                "yield_t_ha": "12-15",
+                "sowing_tip": "Direct sowing. Spacing 45x30cm (Kharif) or 30x15cm (Summer).",
+                "pest_alert": "Yellow Vein Mosaic Virus (transmitted by Whitefly), Fruit Borer.",
+                "source": "IIVR"
+            },
+             {
+                "id": "crop_turmeric",
+                "name": "Turmeric",
+                "local_names": { "ta": "மஞ்சள்", "hi": "हल्दी" },
+                "type": "Spice",
+                "seasons": ["May-Jun"],
+                "soil": "Well-drained sandy or clay loam, rich in organic matter, pH 4.5-7.5",
+                "npk": "N:60-120, P:30-60, K:60-120 kg/ha",
+                "water": "1500-2000 mm",
+                "varieties": ["Prabha", "Prathiba", "Praksham", "BSR-2", "Roma"],
+                "yield_t_ha": "20-30",
+                "sowing_tip": "Plant rhizomes at 30x15cm on ridges. Apply liberal organic manure.",
+                "pest_alert": "Shoot borer, Rhizome rot, Leaf blotch.",
+                "source": "IISR"
+            },
+            {
+                "id": "crop_millets",
+                "name": "Millets (Bajra/Jowar)",
+                "local_names": { "ta": "சிறுதானியங்கள் (கம்பு/சோளம்)", "hi": "बाजरा/ज्वार" },
+                "type": "Cereal",
+                "seasons": ["Kharif (Jun-Jul)", "Zaid (Feb-Mar)"],
+                "soil": "Sandy to loam, tolerates poor soils, pH 5.5-7.5",
+                "npk": "N:40-80, P:20-40, K:20-40 kg/ha",
+                "water": "250-400 mm (Highly drought tolerant)",
+                "varieties": ["Pusa Bajra", "ICMH 356", "CO-9"],
+                "yield_t_ha": "2-4",
+                "sowing_tip": "Direct sowing in lines at 45x15cm. Needs very little water.",
+                "pest_alert": "Shoot fly, Stem borer, Downy mildew.",
+                "source": "IIMR"
+            },
+            {
+                "id": "crop_mango",
+                "name": "Mango",
+                "local_names": { "ta": "மாம்பழம்", "hi": "आम" },
+                "type": "Fruit",
+                "seasons": ["Planted Jun-Jul"],
+                "soil": "Lateritic, alluvial, well-drained, pH 5.5-7.5",
+                "npk": "N:1000g, P:500g, K:1000g per mature tree/year",
+                "water": "700-2500 mm (Requires dry spell before flowering)",
+                "varieties": ["Alphonso", "Banganapalli", "Neelum", "Totapuri", "Dashehari"],
+                "yield_t_ha": "10-20",
+                "sowing_tip": "Plant grafts at 10x10m spacing (or 5x5m for high density). Prune regularly.",
+                "pest_alert": "Mango hopper, Mealybug, Fruit fly, Powdery mildew.",
+                "source": "IIHR"
+            }
+        ],
+        "pests": [
+            {
+                "id": "pest_stem_borer",
+                "name": "Stem Borer",
+                "local_names": { "ta": "தண்டு துளைப்பான்", "hi": "तना छेदक" },
+                "affects": ["Rice", "Sugarcane", "Maize"],
+                "symptoms": "Dead heart at vegetative stage, white ear at booting stage, frass inside stem.",
+                "organic_control": "Release Trichogramma japonicum (50,000/ha) at egg-laying stage. Use pheromone traps.",
+                "chemical_control": "Cartap Hydrochloride 4G @ 10 kg/acre OR Chlorpyrifos 20EC @ 2.5 ml/litre.",
+                "cultural_control": "Avoid close planting. Remove and burn stubble after harvest."
+            },
+            {
+                "id": "pest_whitefly",
+                "name": "Whitefly",
+                "local_names": { "ta": "வெள்ளை ஈ", "hi": "सफेद मक्खी" },
+                "affects": ["Tomato", "Cotton", "Brinjal", "Okra"],
+                "symptoms": "Yellowing, leaf curl, sooty mold on leaves. Vectors TYLCV in tomato.",
+                "organic_control": "Yellow sticky traps (10/acre). Spray Neem oil @ 3 ml/litre. Encourage natural enemies.",
+                "chemical_control": "Thiamethoxam 25WG @ 0.2 g/litre OR Imidacloprid 17.8SL @ 0.3 ml/litre.",
+                "cultural_control": "Use reflective silver mulch. Destroy volunteer plants near field."
+            },
+            {
+                "id": "pest_aphid",
+                "name": "Aphid",
+                "local_names": { "ta": "அசுவினி", "hi": "माहू" },
+                "affects": ["Wheat", "Mustard", "Vegetables", "Pulses"],
+                "symptoms": "Curled, distorted leaves. Sticky honeydew deposits. Ant activity on plants.",
+                "organic_control": "Spray Neem seed kernel extract 5% OR Beauveria bassiana @ 5 ml/litre.",
+                "chemical_control": "Dimethoate 30EC @ 1.7 ml/litre OR Thiamethoxam 25WG @ 0.2 g/litre.",
+                "cultural_control": "Avoid late sowing. Conserve lady bird beetles (Coccinellids) as natural enemies."
+            },
+             {
+                "id": "pest_fall_armyworm",
+                "name": "Fall Armyworm (FAW)",
+                "local_names": { "ta": "படைப்புழு", "hi": "फॉल आर्मीवर्म" },
+                "affects": ["Maize", "Sorghum", "Cotton"],
+                "symptoms": "Large ragged holes in leaves, frass in the whorl.",
+                "organic_control": "Release Trichogramma pretiosum. Neem oil spray 5 ml/litre. Sand+Ash in whorls.",
+                "chemical_control": "Spinetoram 11.7 SC @ 0.5 ml/litre or Emamectin benzoate 5 SG @ 0.4 g/litre in whorl.",
+                "cultural_control": "Deep summer ploughing. Intercropping with legumes (push-pull strategy)."
+            },
+            {
+                "id": "pest_bph",
+                "name": "Brown Plant Hopper (BPH)",
+                "local_names": { "ta": "பழுப்பு தத்துப்பூச்சி", "hi": "भूरा फूदका" },
+                "affects": ["Rice"],
+                "symptoms": "Hopper burn (drying of plants in patches). Nymphs and adults at base of tillers.",
+                "organic_control": "Avoid excessive urea. Alternate wetting and drying. Neem formulations.",
+                "chemical_control": "Pymetrozine 50 WG @ 0.6 g/litre or Dinotefuran 20 SG @ 0.4 g/litre directed at base.",
+                "cultural_control": "Provide 30cm alleyways every 2-3 meters. Grow resistant varieties."
+            },
+            {
+                "id": "disease_powdery_mildew",
+                "name": "Powdery Mildew",
+                "local_names": { "ta": "சாம்பல் நோய்", "hi": "पाउडरी मिल्ड्यू" },
+                "affects": ["Mango", "Grapes", "Cucurbits", "Peas"],
+                "symptoms": "White powdery growth on leaves, stems, and fruits.",
+                "organic_control": "Wettable sulfur spray. Neem oil.",
+                "chemical_control": "Hexaconazole 5 EC @ 1 ml/litre or Myclobutanil 10 WP @ 1 g/litre.",
+                "cultural_control": "Ensure good ventilation, pruning."
+            }
+        ],
+        "government_schemes": [
+            {
+                "id": "scheme_pmkisan",
+                "name": "PM-KISAN",
+                "benefit": "₹6,000 per year in 3 installments",
+                "eligibility": "All landholding farmer families",
+                "how_to_apply": "pmkisan.gov.in or CSC",
+                "documents": ["Aadhaar", "Land records", "Bank account"]
+            },
+            {
+                "id": "scheme_pmfby",
+                "name": "PMFBY (Crop Insurance)",
+                "benefit": "Insurance at low premium (1.5-5%)",
+                "eligibility": "All farmers growing notified crops",
+                "how_to_apply": "Through banks or pmfby.gov.in",
+                "documents": ["Land document", "Bank passbook", "Sowing certificate"]
+            },
+            {
+                "id": "scheme_kcc",
+                "name": "Kisan Credit Card (KCC)",
+                "benefit": "Loans up to ₹3 lakh at 4% interest (with prompt repayment)",
+                "eligibility": "All farmers, sharecroppers",
+                "how_to_apply": "Bank branch",
+                "documents": ["Aadhaar", "Land records"]
+            },
+            {
+                "id": "scheme_pm_kusum",
+                "name": "PM KUSUM",
+                "benefit": "Subsidy (up to 60%) to set up solar pumps",
+                "eligibility": "Farmers, Panchayats, Farmer Producer Organizations (FPOs)",
+                "how_to_apply": "State nodal agencies online portals.",
+                "documents": ["Aadhaar", "Land document", "Bank details", "Grid connection details (if any)"]
+            },
+             {
+                "id": "scheme_enam",
+                "name": "e-NAM (National Agriculture Market)",
+                "benefit": "Pan-India electronic trading portal for better prices",
+                "eligibility": "Farmers, FPOs, Traders",
+                "how_to_apply": "enam.gov.in or eNAM app.",
+                "documents": ["Aadhaar", "Bank passbook"]
+            }
+        ],
+        "fertilizers": [
+            {
+                "id": "fert_urea",
+                "name": "Urea (46-0-0)",
+                "type": "Nitrogenous",
+                "npk_content": "46% Nitrogen",
+                "recommended_dose": "50-100 kg/acre",
+                "application": "Split doses — 1/3 basal, 1/3 tillering, 1/3 panicle initiation. Neem-coated preferred."
+            },
+            {
+                "id": "fert_dap",
+                "name": "DAP (18-46-0)",
+                "type": "Phosphatic + Nitrogenous",
+                "npk_content": "18% N + 46% P2O5",
+                "recommended_dose": "50 kg/acre as basal dose",
+                "application": "Apply before sowing. Incorporate into soil."
+            },
+            {
+                "id": "fert_mop",
+                "name": "Muriate of Potash (MOP)",
+                "type": "Potassic",
+                "npk_content": "60% K2O",
+                "recommended_dose": "20-40 kg/acre",
+                "application": "Apply as basal or split depending on soil K status. Improves grain quality and drought tolerance."
+            },
+            {
+                "id": "fert_ssp",
+                "name": "Single Super Phosphate (SSP)",
+                "type": "Phosphatic + Sulphur",
+                "npk_content": "16% P2O5 + 11% S",
+                "recommended_dose": "100-150 kg/acre",
+                "application": "Good for oilseeds (groundnut, mustard) due to sulphur content. Use as basal dose."
+            }
+        ],
+        "irrigation_methods": [
+            {
+                 "id": "irrig_drip",
+                 "name": "Drip Irrigation",
+                 "best_for": ["Tomato", "Cotton", "Sugarcane", "Banana", "Orchards"],
+                 "water_savings": "40-70% compared to flood irrigation",
+                 "benefits": "Minimizes weed growth, reduces disease risk, enables fertigation (applying fertilizer through water), high yield."
+            },
+            {
+                 "id": "irrig_sprinkler",
+                 "name": "Sprinkler Irrigation",
+                 "best_for": ["Wheat", "Groundnut", "Millets", "Pulses", "Tea"],
+                 "water_savings": "30-50% compared to flood irrigation",
+                 "benefits": "Good for sandy soils and undulating land, creates micro-climate."
+            },
+             {
+                 "id": "irrig_flood",
+                 "name": "Flood Irrigation",
+                 "best_for": ["Rice (Paddy)"],
+                 "water_savings": "None (Low efficiency 30-40%)",
+                 "benefits": "Cheap setup. Necessary for traditional paddy to suppress weeds."
+            }
+        ],
+        "soil_health": [
+            {
+                "id": "soil_black",
+                "name": "Black Soil (Regur)",
+                "regions": ["Deccan Plateau", "Maharashtra", "Gujarat", "MP", "Parts of TN"],
+                "characteristics": "High clay content, poor drainage, swells when wet, cracks when dry. Rich in lime, iron, magnesia.",
+                "suitable_crops": ["Cotton", "Sugarcane", "Wheat", "Millets"]
+            },
+            {
+                "id": "soil_red",
+                "name": "Red & Laterite Soil",
+                "regions": ["Tamil Nadu", "Karnataka", "Andhra Pradesh", "Odisha"],
+                "characteristics": "Sandy to loam, good drainage, poor in Nitrogen/Phosphorus/Humus. Rich in Iron (red color).",
+                "suitable_crops": ["Groundnut", "Millets", "Pulses", "Tobacco"]
+            },
+             {
+                "id": "soil_alluvial",
+                "name": "Alluvial Soil",
+                "regions": ["Indo-Gangetic Plains", "Coastal regions", "River deltas"],
+                "characteristics": "Highly fertile, loam to clay loam, rich in potash but poor in phosphorus.",
+                "suitable_crops": ["Rice", "Wheat", "Sugarcane", "Jute"]
+            }
+        ]
+    }
+}

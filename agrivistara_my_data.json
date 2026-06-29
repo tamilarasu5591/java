@@ -1,0 +1,44 @@
+﻿{
+    "activities":  [
+                       {
+                           "action":  "Login",
+                           "details":  "User logged in to the application.",
+                           "timestamp":  "2026-03-09 06:52:35"
+                       },
+                       {
+                           "action":  "Login",
+                           "details":  "User logged in to the application.",
+                           "timestamp":  "2026-03-09 06:40:40"
+                       },
+                       {
+                           "action":  "Chatbot Query",
+                           "details":  "Asked AI: \u0027Hello AI...\u0027",
+                           "timestamp":  "2026-03-09 06:40:40"
+                       },
+                       {
+                           "action":  "Market Listing",
+                           "details":  "Listed Tomato for ₹100 at Local",
+                           "timestamp":  "2026-03-09 06:40:40"
+                       }
+                   ],
+    "forum_posts":  [
+
+                    ],
+    "machinery_bookings":  [
+
+                           ],
+    "profile":  {
+                    "email":  "test@example.com",
+                    "name":  "Test User",
+                    "phone":  "9876500000"
+                },
+    "soil_tests":  [
+
+                   ],
+    "store_orders":  [
+
+                     ],
+    "yield_estimates":  [
+
+                        ]
+}
